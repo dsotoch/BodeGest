@@ -1,0 +1,10 @@
+.buttons-pdf {
+    background-color: red !important;
+}
+.buttons-excel{
+    background-color: green !important;
+}
+#tabla-productos th {
+    background-color: Crimson	;
+    color: white;
+}
