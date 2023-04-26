@@ -47,4 +47,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(personas::class, 'user_id', 'id');
     }
+    public function articulos(): HasOne
+    {
+        return $this->hasOne(articulos::class, 'user_id', 'id');
+    }
+    public function provedores():HasOne
+    {
+        return $this->hasOne(provedores::class,'user_id','id');
+    }
 }

@@ -18,10 +18,15 @@ class articulos extends Model
         'precioVenta',
         'medida',
         'lucro',
-        'id_provedor'
+        'id_provedor',
+        'user_id'
     ];
     public function provedores(): HasOne
     {
         return $this->hasOne(provedores::class, 'id_provedor', 'id');
+    }
+    public function usuarios(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

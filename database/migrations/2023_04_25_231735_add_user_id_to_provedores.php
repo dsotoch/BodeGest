@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,14 +14,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('provedores', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre');
-            $table->string('pais');
-            $table->string('direccion');
-            $table->string('correo');
-            $table->integer('telefono');
-            $table->timestamps();
+        Schema::table('provedores', function (Blueprint $table) {
+            $table->foreignId('user_id')->nullable()->references('id')->on('users')->ondelete('cascade');
+
         });
     }
 
@@ -31,6 +27,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('provedores');
+        Schema::table('provedores', function (Blueprint $table) {
+            //
+        });
     }
 };

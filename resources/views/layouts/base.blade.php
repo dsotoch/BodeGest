@@ -179,12 +179,11 @@
                                             class="nav-link-text ps-1">Articulos</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link"
-                                    href="{{ asset('falcon/public/app/chat.html') }}" role="button"
-                                    aria-expanded="false">
+                                <!-- parent pages--><a class="nav-link" href="{{ route('compras') }}"
+                                    role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-comments"></span></span><span
-                                            class="nav-link-text ps-1">Chat</span>
+                                                class=" fas fa-user"></span></span><span
+                                            class="nav-link-text ps-1">Compras</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link dropdown-indicator" href="#email"
@@ -195,35 +194,7 @@
                                             class="nav-link-text ps-1">Email</span>
                                     </div>
                                 </a>
-                                <ul class="nav collapse false" id="email">
-                                    <li class="nav-item"><a class="nav-link"
-                                            href="{{ asset('falcon/public/app/email/inbox.html') }}"
-                                            aria-expanded="false">
-                                            <div class="d-flex align-items-center"><span
-                                                    class="nav-link-text ps-1">Inbox</span>
-                                            </div>
-                                        </a>
-                                        <!-- more inner pages-->
-                                    </li>
-                                    <li class="nav-item"><a class="nav-link"
-                                            href="{{ asset('falcon/public/app/email/email-detail.html') }}"
-                                            aria-expanded="false">
-                                            <div class="d-flex align-items-center"><span
-                                                    class="nav-link-text ps-1">Email detail</span>
-                                            </div>
-                                        </a>
-                                        <!-- more inner pages-->
-                                    </li>
-                                    <li class="nav-item"><a class="nav-link"
-                                            href="{{ asset('falcon/public/app/email/compose.html') }}"
-                                            aria-expanded="false">
-                                            <div class="d-flex align-items-center"><span
-                                                    class="nav-link-text ps-1">Compose</span>
-                                            </div>
-                                        </a>
-                                        <!-- more inner pages-->
-                                    </li>
-                                </ul>
+                               
                                 <!-- parent pages--><a class="nav-link dropdown-indicator" href="#events"
                                     role="button" data-bs-toggle="collapse" aria-expanded="false"
                                     aria-controls="events">

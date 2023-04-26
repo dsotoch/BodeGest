@@ -293,10 +293,16 @@ $(document).on('click', '#btn-registrar-articulo', function (e) {
             success: function (response) {
                 let nuevafila = [response.id, response.descripcion, response.marca, response.presentacion + ' ' + response.medida, response.stock, response.precioCompra, response.precioVenta];
                 table.row.add(nuevafila).draw();
-                let cant = parseInt(productos_stock.text());
-                var nuevaEtiqueta = $('<p>').text(cant + 1).addClass('font-sans-serif lh-1 mb-1 fs-4').attr('id', 'stock');
-
-                productos_stock.replaceWith(nuevaEtiqueta);
+                let cantid_stock = response.stock;
+                let cantidad_sin_stock = parseInt((productos_sin_stock).text());
+                let cantidad = parseInt((productos_stock).text());
+                if (cantid_stock[0] <= 0) {
+                    let nuevaEtiqueta = $('<p>').text(cantidad_sin_stock +1).addClass('font-sans-serif lh-1 mb-1 fs-4').attr('id', 'sin-stock');
+                    productos_sin_stock.replaceWith(nuevaEtiqueta);
+                } else {
+                    let nuevaEtiqueta = $('<p>').text(cantidad + 1).addClass('font-sans-serif lh-1 mb-1 fs-4').attr('id', 'stock');
+                    productos_stock.replaceWith(nuevaEtiqueta);
+                }
                 Swal.fire({
                     title: 'Confirmación',
                     text: 'Articulo Registrado Correctamente',
@@ -346,6 +352,9 @@ $(document).on('click', '#btn-borrar-todo', function () {
 });
 $(document).on('click', '#btn-borrar', function () {
     let filaSeleccionada = table.rows({ selected: true }).data()[0];
+    let filaSeleccionada2 = table.rows({ selected: true });
+    let productos_stock = $('#stock');
+    let productos_sin_stock = $('#sin-stock');
 
     if (filaSeleccionada == undefined) {
         swal.fire({
@@ -354,6 +363,7 @@ $(document).on('click', '#btn-borrar', function () {
             icon: 'error'
         });
     } else {
+        let id = filaSeleccionada[0];
         let tresPrimerasColumnas = filaSeleccionada.slice(0, 3);
         Swal.fire({
             title: 'Peligro',
@@ -365,9 +375,119 @@ $(document).on('click', '#btn-borrar', function () {
 
         }).then((result) => {
             if (result.isConfirmed) {
-                //asa//asdasda
+
+                $.ajax({
+                    type: "get",
+                    url: "/Articulos/Eliminar/" + id,
+                    data: "",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response == true) {
+                            let cantid_stock = table.cell(filaSeleccionada2, 4).data();
+                            let cantidad_sin_stock = parseInt((productos_sin_stock).text());
+                            let cantidad = parseInt((productos_stock).text());
+
+                            if (cantid_stock[0] <= 0) {
+                                let nuevaEtiqueta = $('<p>').text(cantidad_sin_stock - 1).addClass('font-sans-serif lh-1 mb-1 fs-4').attr('id', 'sin-stock');
+                                productos_sin_stock.replaceWith(nuevaEtiqueta);
+                            } else {
+                                let nuevaEtiqueta = $('<p>').text(cantidad - 1).addClass('font-sans-serif lh-1 mb-1 fs-4').attr('id', 'stock');
+                                productos_stock.replaceWith(nuevaEtiqueta);
+                            }
+                            table.rows(filaSeleccionada2).remove().draw();
+                            swal.fire({
+                                title: 'Confirmación',
+                                text: 'Se Ha Borrado el Articulo',
+                                icon: 'success'
+                            });
+                        }
+                    }
+                });
+
+
+
             }
         });
     }
 
+});
+var id_art_modificar = 0;
+$(document).on('click', '#btn-modificar', function () {
+    let filaSeleccionada = table.rows({ selected: true }).data()[0];
+    if (filaSeleccionada == undefined) {
+        swal.fire({
+            title: 'Error',
+            text: 'Selecciona el Articulo A Modificar',
+            icon: 'error'
+        });
+    } else {
+        id_art_modificar = filaSeleccionada[0];
+        $.ajax({
+            type: "get",
+            url: "/Articulos/BuscarArticulo/" + id_art_modificar,
+            data: "",
+            dataType: "json",
+            success: function (response) {
+                $.each(response, function (index, producto) {
+                    $("#descripcion2").val(producto.descripcion);
+                    $("#marca2").val(producto.marca);
+                    $("#stock-form2").val(producto.stock);
+                    $("#precioCompra2").val(producto.precioCompra);
+                    $("#precioVenta2").val(producto.precioVenta);
+                    $("#ganancia2").val(producto.lucro);
+                    $("#btn-modificar-articulo").attr('disabled', false);
+
+                });
+
+
+            }
+        });
+
+    }
+});
+$(document).on('click', '#btn-modificar-articulo', function (e) {
+    e.preventDefault();
+    let descripcion = $("#descripcion2").val();
+    let marca = $("#marca2").val();
+    let stock = $("#stock-form2").val();
+    let precioVenta = $("#precioVenta2").val();
+    let lucro = $("#ganancia2").val();
+    if (descripcion == "" || marca == "" || stock == "" || precioVenta == "" || lucro == "") {
+        swal.fire({
+            title: 'Error',
+            text: 'Complete todos los Campos',
+            icon: 'error'
+        });
+    } else {
+        let datos = {
+            descripcion: descripcion,
+            marca: marca,
+            stock: stock,
+            precioVenta: precioVenta,
+            lucro: lucro,
+        };
+        $.ajax({
+            type: 'get',
+            url: '/Articulos/ModificarArticulo/' + id_art_modificar,
+            data: datos,
+            dataType: 'json',
+            success: function (response) {
+
+
+                swal.fire({
+                    title: 'Confirmacion',
+                    text: 'Articulo Modificado Correctamente',
+                    icon: 'success',
+                }).then((value) => {
+                    window.location.reload();
+                });
+
+
+
+
+
+            }
+
+        });
+    }
 });

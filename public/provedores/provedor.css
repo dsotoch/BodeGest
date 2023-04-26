@@ -1,0 +1,97 @@
+button:hover {
+    transform: scale(1.3) !important;
+
+}
+
+.div-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.btn-primary {
+    margin-left: 0.1rem;
+}
+
+.btn-warning {
+    margin-left: 0.1rem;
+}
+
+.btn-icon-prepend {
+    margin-right: 0.2rem;
+}
+
+#superior {
+  
+    border-radius: 5px;
+
+}
+
+.titulos {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.buttons-pdf {
+    margin: 2px;
+
+    background-color: goldenrod;
+}
+
+.buttons-excel {
+    margin: 2px;
+    background-color: brown;
+}
+#tabla-provedores th {
+    background-color: blue;
+    color: white;
+}
+#th-id{
+    max-width: 10px;
+}
+#th-pais{
+    max-width: 50px;
+}
+#th-telefono{
+    max-width: 80px;
+}
+#th-opciones{
+    max-width: 100px;
+}
+#div-buttons-crear{
+    display: flex;
+    justify-content: flex-end;
+}
+#div-buttons-crear button{
+    max-width: 100px;
+}
+.btn-danger{
+    margin: 0.1rem;
+}
+#div-opciones{
+    display: flex;
+    justify-content: center;
+    
+}
+#div-opciones button{
+    border-radius: 10px;
+    max-width: fit-content;
+}
+#div-titulo-provedor{
+    background-color: yellow !important;
+    
+    
+}
+#detalle-nombres{
+    color: black !important;
+}
+#div-buttons-editar{
+    
+    display: flex;
+    justify-content: flex-start;
+}
+#div-buttons-editar button{
+    margin-left:1.5rem;
+    max-width: 100px;
+}
+

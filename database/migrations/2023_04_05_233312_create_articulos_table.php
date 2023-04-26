@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('lucro');
 
             $table->foreignId('id_provedor')->nullable()->references('id')->on('provedores')->onDelete(NULL);
+            $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete(NULL);
 
             $table->timestamps();
         });
