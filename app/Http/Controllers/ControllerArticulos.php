@@ -15,7 +15,7 @@ class ControllerArticulos extends Controller
         $user = Auth::user();
         $articulos = articulos::where('user_id', $user->id)->get();
         $numero_productos = $articulos->count();
-        $columnas = array_slice(Schema::getColumnListing('articulos'), 0, -6);
+        $columnas = array_slice(Schema::getColumnListing('articulos'), 0, -7);
         $productos_con_stock = $articulos->where('stock', '>', 0)->count();
         $productos_sin_stock = $articulos->where('stock', '<=', 0)->count();
         if ($numero_productos === 0) {

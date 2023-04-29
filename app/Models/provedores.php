@@ -20,13 +20,17 @@ class provedores extends Model
         'user_id',
     ];
 
-    public function articulos(): BelongsTo
+    public function articulos(): HasOne
     {
-        return $this->belongsTo(articulos::class, 'id_provedor', 'id');
+        return $this->hasOne(articulos::class, 'provedor_id', 'id');
     }
-    public function usuarios():BelongsTo
+    public function usuarios(): BelongsTo
 
     {
-        return  $this->belongsTo(User::class,'user_id','id');
+        return  $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function compras(): HasMany
+    {
+        return  $this->hasMany(compras::class,'provedor_id');
     }
 }

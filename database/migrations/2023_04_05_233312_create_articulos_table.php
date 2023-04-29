@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('precioVenta');
             $table->string('medida');
             $table->string('lucro');
-
-            $table->foreignId('id_provedor')->nullable()->references('id')->on('provedores')->onDelete(NULL);
+            $table->foreignId('compra_id')->nullable()->references('id')->on('compras')->onDelete(NULL);
+            $table->foreignId('provedor_id')->nullable()->references('id')->on('provedores')->onDelete(NULL);
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete(NULL);
 
             $table->timestamps();

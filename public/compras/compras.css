@@ -1,0 +1,82 @@
+#div-proveedor {
+    display: flex;
+    justify-content: flex-start;
+}
+
+#comprobante {
+    width: 100%;
+
+}
+
+#tabla-compra th {
+    background-color: blueviolet;
+    color: white;
+}
+
+#compra-id {
+    width: 10%;
+}
+
+#compra-precio {
+    width: 10%;
+}
+
+#compra-cantidad {
+    width: 10%;
+}
+
+#compra-total {
+    width: 10%;
+}
+
+#div-opcion-botones {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#div-opcion-botones button {
+    margin: 0.2rem;
+    width: 85%;
+}
+
+
+.btn:hover {
+    transform: scale(1.3);
+
+}
+
+#tabla-proveedores th {
+    background-color: red;
+    color: white;
+}
+
+#tabla-productos th {
+    background-color: red;
+    color: white;
+}
+.boton-ayuda{
+    padding-right: 1rem ;
+    padding-bottom: 1rem;
+    display: flex;
+    justify-content: flex-end;
+}
+.boton-ayuda button i{
+    margin-right: 0.3rem;
+}
+.titulos{
+    margin: 0.5rem;
+    color: yellowgreen;
+    font-weight: bold;
+}
+.button-finalizar{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.2rem;
+}
+.button-finalizar button{
+    
+    margin: 0.2rem;
+}

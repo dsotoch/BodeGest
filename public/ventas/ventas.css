@@ -1,0 +1,63 @@
+.alt-derecha {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0.2rem;
+}
+
+.cab {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+button:hover {
+    transform: scale(1.3);
+}
+
+#th-id {
+    width: 10%;
+}
+
+#th-cantidad {
+    width: 10%;
+}
+
+#th-precio {
+    width: 10%;
+}
+
+#th-total {
+    width: 10%;
+}
+
+#th-accion {
+    width: 10%;
+}
+
+#t-cambio {
+    background-color: black;
+    font-weight: bold;
+    color: white;
+}
+
+#t-cant {
+    margin-top: 0.2rem;
+    margin-right: 0.5rem;
+}
+
+
+
+#cantidad {
+    width: 30%;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+}
+.mod-ca{
+    display: flex;
+    justify-content: flex-end;
+}

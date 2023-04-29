@@ -18,15 +18,19 @@ class articulos extends Model
         'precioVenta',
         'medida',
         'lucro',
-        'id_provedor',
-        'user_id'
+        'provedor_id',
+        'user_id',
+        'compra_id',
     ];
-    public function provedores(): HasOne
+    public function provedores(): BelongsTo
     {
-        return $this->hasOne(provedores::class, 'id_provedor', 'id');
+        return $this->belongsTo(provedores::class,'provedor_id');
     }
     public function usuarios(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class,'user_id');
+    }
+    public function compras():BelongsTo {
+        return $this->belongsTo(compras::class,'compra_id');
     }
 }

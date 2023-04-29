@@ -236,15 +236,15 @@ $(document).on('click', '#btn-calcular-precios', function () {
                 icon: 'error'
             });
         } else {
-            let precio_venta = Math.round((parseFloat($("#precio").text()) * parseFloat($("#forma-presentacion").text()) * 10) / 10);
-            let precio_compra = Math.round((parseFloat($("#precioCompra").val()) * parseFloat(presentacion)) * 10) / 10;
-            $("#precioVenta").val(parseFloat(precio_venta.toFixed(2)));
-            $("#precioCompra").val(parseFloat(precio_compra.toFixed(2)));
+            let precio_venta = ((parseFloat($("#precio").text()) * parseFloat($("#forma-presentacion").text()) * 10) / 10);
+            let precio_compra = ((parseFloat($("#precioCompra").val()) * parseFloat(presentacion)) * 10) / 10;
+            $("#precioVenta").val(parseFloat(precio_venta).toFixed(2));
+            $("#precioCompra").val(parseFloat(precio_compra).toFixed(2));
 
 
             Swal.fire({
                 title: 'Precio de Compra-Venta',
-                text: `El precio de Compra de ${$("#forma-presentacion").text()} ${$("#medida-presentacion").text()} es ${parseFloat(precio_compra.toFixed(2))}.\nEl precio de venta de ${$("#forma-presentacion").text()} ${$("#medida-presentacion").text()} es ${parseFloat(precio_venta.toFixed(2))}.`,
+                text: `El precio de Compra de ${$("#forma-presentacion").text()} ${$("#medida-presentacion").text()} es ${parseFloat(precio_compra).toFixed(2)}.\nEl precio de venta de ${$("#forma-presentacion").text()} ${$("#medida-presentacion").text()} es ${parseFloat(precio_venta).toFixed(2)}.`,
                 icon: 'info'
             });
 
@@ -297,7 +297,7 @@ $(document).on('click', '#btn-registrar-articulo', function (e) {
                 let cantidad_sin_stock = parseInt((productos_sin_stock).text());
                 let cantidad = parseInt((productos_stock).text());
                 if (cantid_stock[0] <= 0) {
-                    let nuevaEtiqueta = $('<p>').text(cantidad_sin_stock +1).addClass('font-sans-serif lh-1 mb-1 fs-4').attr('id', 'sin-stock');
+                    let nuevaEtiqueta = $('<p>').text(cantidad_sin_stock + 1).addClass('font-sans-serif lh-1 mb-1 fs-4').attr('id', 'sin-stock');
                     productos_sin_stock.replaceWith(nuevaEtiqueta);
                 } else {
                     let nuevaEtiqueta = $('<p>').text(cantidad + 1).addClass('font-sans-serif lh-1 mb-1 fs-4').attr('id', 'stock');

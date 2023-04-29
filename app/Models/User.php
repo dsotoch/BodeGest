@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -54,5 +55,8 @@ class User extends Authenticatable
     public function provedores():HasOne
     {
         return $this->hasOne(provedores::class,'user_id','id');
+    }
+    public function  compras():HasMany{
+        return $this->hasMany(compras::class,'user_id');
     }
 }

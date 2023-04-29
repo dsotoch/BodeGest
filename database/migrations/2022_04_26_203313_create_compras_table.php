@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('compras', function (Blueprint $table) {
             $table->id();
+            $table->string('metodoPago');
+            $table->string('totalCompra');
+            $table->binary('comprobante')->nullable();
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('provedor_id')->nullable()->references('id')->on('provedores')->onDelete(NULL);
             $table->timestamps();
         });
     }

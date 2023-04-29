@@ -404,5 +404,5 @@
 <script src="{{ asset('DataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
 
-<script src="{{asset('articulos/articulo.js')}}" type="module"></script>
+<script src="{{asset('articulos/articulo.js')}}"></script>
 @endsection

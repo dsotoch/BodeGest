@@ -6,6 +6,7 @@ use App\Http\Controllers\ControllerCompras;
 use App\Http\Controllers\ControllerPrincipal;
 use App\Http\Controllers\ControllerProvedores;
 use App\Http\Controllers\ControllerUsuario;
+use App\Http\Controllers\ControllerVentas;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,4 +56,17 @@ Route::controller(ControllerProvedores::class)->prefix('Provedores')->group(func
 });
 Route::controller(ControllerCompras::class)->prefix('Compras')->group(function(){
     Route::get('Index','index')->name('compras');
+    Route::get('GenerarCodigoCompra','codigo');
+    Route::get('Proveedores','proveedores');
+    Route::get('Productos','productos');
+    Route::get('CrearCompra','create')->name('crearCompra');
+    Route::get('FinalizarCompra/{id}','finalizar')->name('finalizar');
+});
+Route::controller(ControllerVentas::class)->prefix('Ventas')->group(function(){
+    Route::get('Index','index')->name('ventas');
+    Route::get('GenerarCodigoCompra','codigo');
+    Route::get('Proveedores','proveedores');
+    Route::get('Productos','productos');
+    Route::get('CrearCompra','create')->name('crearCompra');
+    Route::get('FinalizarCompra/{id}','finalizar')->name('finalizar');
 });
