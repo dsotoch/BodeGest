@@ -13,17 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ventas', function (Blueprint $table) {
+        Schema::create('clientes', function (Blueprint $table) {
             $table->id();
-            $table->string('documento');
-            $table->date('fecha');
-            $table->string('iva');
-            $table->string('nota');
-            $table->string('formaPago');
-            $table->string('montoInicio');
-            $table->string('totalVenta');
-            $table->string('moneda');
-            $table->foreignId('cliente_id')->nullable()->references('id')->on('clientes')->onDelete(NULL);
+            $table->string('dni');
+            $table->string('cliente');
+            $table->string('telefono');
+            $table->string('email');
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -36,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ventas');
+        Schema::dropIfExists('clientes');
     }
 };

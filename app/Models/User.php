@@ -59,4 +59,7 @@ class User extends Authenticatable
     public function  compras():HasMany{
         return $this->hasMany(compras::class,'user_id');
     }
+    public function clientes():HasMany{
+        return $this->hasMany(clientes::class,'user_id');
+    }
 }

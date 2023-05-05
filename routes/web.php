@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ControllerArticulos;
+use App\Http\Controllers\ControllerClientes;
 use App\Http\Controllers\ControllerCompras;
+use App\Http\Controllers\ControllerCuenta;
 use App\Http\Controllers\ControllerPrincipal;
 use App\Http\Controllers\ControllerProvedores;
 use App\Http\Controllers\ControllerUsuario;
@@ -67,6 +69,20 @@ Route::controller(ControllerVentas::class)->prefix('Ventas')->group(function(){
     Route::get('GenerarCodigoCompra','codigo');
     Route::get('Proveedores','proveedores');
     Route::get('Productos','productos');
-    Route::get('CrearCompra','create')->name('crearCompra');
-    Route::get('FinalizarCompra/{id}','finalizar')->name('finalizar');
+    Route::post('CrearVenta','store')->name('crearVenta');
+    Route::get('Numero','numero_venta');
+    Route::get('Detalle/{id}','detalle')->name('detalleVenta');
+    Route::get('generarPDF','generar_pdf');
+    Route::post('Comprobante','enviar_comprobante');
+    Route::post('Print','imprimir');
+
+});
+
+Route::controller(ControllerClientes::class)->prefix('Clientes')->group(function(){
+    Route::get('Crear','store')->name('crea_cliente');
+  
+});
+Route::controller(ControllerCuenta::class)->prefix('Cuentas')->group(function(){
+    Route::get('Index','index')->name('cuentas');
+  
 });

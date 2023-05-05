@@ -13,9 +13,9 @@ class ControllerArticulos extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $articulos = articulos::where('user_id', $user->id)->get();
+        $articulos = articulos::where('user_id', $user->id)->where('estado','1')->get();
         $numero_productos = $articulos->count();
-        $columnas = array_slice(Schema::getColumnListing('articulos'), 0, -7);
+        $columnas = array_slice(Schema::getColumnListing('articulos'), 0, -8);
         $productos_con_stock = $articulos->where('stock', '>', 0)->count();
         $productos_sin_stock = $articulos->where('stock', '<=', 0)->count();
         if ($numero_productos === 0) {

@@ -37,7 +37,7 @@ class ControllerCompras extends Controller
     public function productos(Request $request)
     {
         $user = Auth::user();
-        $productos = articulos::where('user_id', $user->id)->get();
+        $productos = articulos::where('user_id', $user->id)->where('estado','1')->get();
         return response()->json($productos);
     }
     /**

@@ -53,11 +53,18 @@ button:hover {
 
 #cantidad {
     width: 30%;
-    background-color: black;
     color: white;
     font-weight: bold;
 }
 .mod-ca{
+    display: flex;
+    justify-content: flex-end;
+}
+.buscador {
+    display: flex;
+
+}
+.elementos-derecha{
     display: flex;
     justify-content: flex-end;
 }

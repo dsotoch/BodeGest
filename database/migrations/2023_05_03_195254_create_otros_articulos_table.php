@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('empresas', function (Blueprint $table) {
+        Schema::create('otros_articulos', function (Blueprint $table) {
             $table->id();
-            $table->string('logo')->nullable();
-            $table->string('nombre')->default('BodeGest');
-            $table->string('direccion')->default('Av los Laureles Viru-Peru');
-            $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('empresas');
+        Schema::dropIfExists('otros_articulos');
     }
 };
