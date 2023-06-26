@@ -111,6 +111,7 @@
                                 <td class="td-10">Cantidad</td>
                                 <td>Descripcion</td>
                                 <td class="td-10">Precio Unit.</td>
+                                <td class="td-10">Cant.</td>
                                 <td class="td-10">Total</td>
                             </tr>
                         </thead>
@@ -119,6 +120,7 @@
                                 <td class="td-10">{{$n->pivot->cantidad}}</td>
                                 <td>{{$n->descripcion}} {{$n->marca}} {{$n->medida}} {{$n->presentacion}}</td>
                                 <td class="td-10">{{$n->precioVenta}}</td>
+                                <td class="td-10">{{$n->pivot->cantidad}}</td>
                                 <td class="td-10">{{$n->pivot->cantidad * $n->precioVenta}}</td>
                             </tr>
 

@@ -7,5 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class empresas extends Model
 {
-    use HasFactory;
+    protected $fillable=[
+        'ruc',
+        'nombre',
+        'telefono',
+        'direccion',
+        'user_id'
+    ];
 }

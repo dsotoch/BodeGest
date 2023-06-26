@@ -6,6 +6,7 @@ use App\Mail\EnviarComprobante;
 use App\Models\articulos;
 use App\Models\clientes;
 use App\Models\empresas;
+use App\Models\movimientos;
 use App\Models\ventas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -119,8 +120,13 @@ class ControllerVentas extends Controller
                 if ($articulos) {
                     $venta->articulos()->attach(
                         $articulos->id,
-                        ['cantidad' => $array['cantidad']]
+                        [
+                            'cantidad' => $array['cantidad'],
+                            'user_id' => $user->id
+                        ]
                     );
+                    $articulos->stock = $articulos->stock - intval($array['cantidad']);
+                    $articulos->save();
                 }
             }
         }
@@ -145,10 +151,22 @@ class ControllerVentas extends Controller
 
                 $venta->articulos()->attach(
                     $articulo->id,
-                    ['cantidad' => $articulo->stock]
+                    [
+                        'cantidad' => $articulo->stock,
+                        'user_id' => $user->id
+                    ]
                 );
             }
         }
+        movimientos::create(
+            [
+                'monto' => $venta->totalVenta,
+                'fecha' => $venta->fecha,
+                'operacion' => $venta->id,
+                'user_id' => $user->id,
+                'tipo' => "VENTA",
+            ]
+        );
         return redirect()->route('detalleVenta', ['id' => $venta->id])->with(['message' => "Venta Completada"]);
     }
     public function detalle($id)
@@ -211,5 +229,26 @@ class ControllerVentas extends Controller
     }
     public function imprimir(Request $request)
     {
+    }
+    public function detalleventas()
+    {
+        return view('ventas/dventas');
+    }
+    public function detalle_venta(Request $request)
+    {
+        $user=Auth::user();
+        $venta=ventas::where('user_id',$user->id)->where('documento',$request->input('venta'))->first();
+        $reponse=[];
+        if($venta){
+            $cliente=clientes::where('user_id',$user->id)->where('id',$venta->cliente_id)->first();
+            $productos=$venta->articulos;
+            array_push($reponse,[$venta,$cliente,$productos]);
+
+            return response()->json($reponse);
+        }else{
+            return response()->json(500);
+        }
+
+        
     }
 }

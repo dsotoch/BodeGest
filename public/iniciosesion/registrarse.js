@@ -26,6 +26,8 @@ $(document).on('click', '#btn-registrarse', function (e) {
                 'error'
             )
         } else {
+            $('#btn-registrarse').attr('disabled', true);
+
             $.ajax({
                 type: "GET",
                 url: "/Login/Registrarse",
@@ -40,21 +42,26 @@ $(document).on('click', '#btn-registrarse', function (e) {
                         )
                     } else {
                         Swal.fire(
-                            response.email,
-                            'Revise su Correo Electronico para Confirmar su Cuenta!',
+                            email,
+                            'Revise su Correo Electrónico para Confirmar su Cuenta! Antes es Momento de Elegir un Plan',
                             'warning'
-                        )
+                        ).then(function () {
+                            $("#exampleModal").modal('hide');
+
+                        });
+
+
 
                     }
                 }
             });
+
         }
     }
 
 
 });
-$(document).on('click', '#btn-iniciar-sesion', function (e) {
-    e.preventDefault();
+$(document).on('click', '#btn-iniciar-sesion', function () {
     let email = $("#email").val();
     let password = $("#password").val();
     if (email == "" || password == "") {
@@ -90,6 +97,14 @@ $(document).on('click', '#btn-iniciar-sesion', function (e) {
                             confirmButtonText: 'Ok'
                         });
                         break;
+                    case 'correo':
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Tu Correo Electronico no es Valido',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+                        break;
                     case 'verificado':
                         Swal.fire({
                             title: 'Error!',
@@ -98,7 +113,10 @@ $(document).on('click', '#btn-iniciar-sesion', function (e) {
                             confirmButtonText: 'Ok'
                         });
                         break;
-
+                    case 'licencia':
+                        $("#cliente").val(email);
+                        $("#sinlicencia").prop('hidden', false);
+                        break;
                     default:
                         Swal.fire({
                             title: 'Error!',
@@ -113,3 +131,15 @@ $(document).on('click', '#btn-iniciar-sesion', function (e) {
     }
 
 });
+var cliente = "";
+var plan = "";
+$(document).on('click', '#btn-basico', function () {
+    cliente = $("#cliente").val();
+    plan = $("#planbasico").val();
+    $("#modalprecios").modal('hide');
+    $("#modal-pagar").modal('show');
+    $("#amount").val(plan);
+    $("#cliente-email").val(cliente);
+});
+
+

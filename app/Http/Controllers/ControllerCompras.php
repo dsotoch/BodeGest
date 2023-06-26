@@ -6,9 +6,11 @@ use App\Models\articulos;
 use App\Models\compras;
 use App\Models\empresas;
 use App\Models\provedores;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use TCPDF;
+use Intervention\Image\Facades\Image;
 
 class ControllerCompras extends Controller
 {
@@ -37,7 +39,7 @@ class ControllerCompras extends Controller
     public function productos(Request $request)
     {
         $user = Auth::user();
-        $productos = articulos::where('user_id', $user->id)->where('estado','1')->get();
+        $productos = articulos::where('user_id', $user->id)->where('estado', '1')->where('stock', '>', 0)->get();
         return response()->json($productos);
     }
     /**
@@ -50,24 +52,23 @@ class ControllerCompras extends Controller
     public function create(Request $request)
     {
         $user = Auth::user();
-        $id_productos = $request->input('productos');
-        $proveedor = provedores::where('user_id', $user->id)->where('id', $request->proveedor)->first();
         $compra = new compras();
-        $compra->totalCompra = $request->total;
-        $compra->metodoPago = $request->metodo;
-        $compra->provedores()->associate($proveedor);
+        $compra->totalCompra = $request->input('total-compra');
+        $compra->metodoPago = $request->input('metodo');
+        $compra->provedor = $request->input('proveedor');
+        $compra->fecha = Carbon::parse($request->input("fecha"));
         $compra->usuarios()->associate($user);
+
+        $imagencomprimida = Image::make($request->file('comprobante'))->encode('jpg', 80);
+        $nombreunico = time() . $request->file('comprobante')->getClientOriginalName();
+        $rutaImagenComprimida = 'imagenes/usuarios/' . $nombreunico;
+
+        $imagencomprimida->save(public_path($rutaImagenComprimida));
+        $compra->comprobante = $nombreunico;
+        $compra->public_path = $rutaImagenComprimida;
         $compra->save();
 
-        foreach ($id_productos as $key => $value) {
-            $producto = articulos::where('user_id', $user->id)->find($value);
-            $producto->compras()->associate($compra);
-            $producto->save();
-            $producto->provedores()->associate($proveedor);
-            $producto->save();
-        }
-        $url = route('finalizar', ['id' => $compra->id]);
-        return response()->json(['url' => $url]);
+        return redirect()->route('compras')->with(['mensaje' => "Compra Numero" . " "  . $compra->id . " Registrada Correctamente"]);
     }
     public function finalizar($id)
     {
@@ -98,9 +99,23 @@ class ControllerCompras extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function detallecompras()
     {
-        //
+        $user = Auth::user();
+        $compras = compras::where('user_id', $user->id)->get();
+        return view('compras/dcompras', ['compras' => $compras]);
+    }
+    public function detalle_compra(Request $request)
+    {
+        
+        $user = Auth::user();
+        $compras = compras::where('user_id', $user->id)->where('id', $request->input('compra'))->first();
+       
+        if ($compras) {
+            return response()->json($compras);
+        } else {
+            return response()->json(500);
+        }
     }
 
     /**
@@ -138,7 +153,7 @@ class ControllerCompras extends Controller
     }
     public function generarPdf(Request $request)
     {
-        
+
         $pdf = new TCPDF();
 
         // Establece la configuración del PDF

@@ -14,7 +14,9 @@ class compras extends Model
         'metodoPago',
         'totalCompra',
         'user_id',
-        'provedor_id',
+        'provedor',
+        'fecha',
+        'public_path',
         'comprobante',
     ];
 

@@ -44,6 +44,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function suscripciones():HasMany
+    {
+        return $this->hasMany(suscripcions::class);
+    }
     public function personas(): HasOne
     {
         return $this->hasOne(personas::class, 'user_id', 'id');
@@ -52,14 +56,20 @@ class User extends Authenticatable
     {
         return $this->hasOne(articulos::class, 'user_id', 'id');
     }
-    public function provedores():HasOne
+    public function provedores(): HasOne
     {
-        return $this->hasOne(provedores::class,'user_id','id');
+        return $this->hasOne(provedores::class, 'user_id', 'id');
     }
-    public function  compras():HasMany{
-        return $this->hasMany(compras::class,'user_id');
+    public function  compras(): HasMany
+    {
+        return $this->hasMany(compras::class, 'user_id');
     }
-    public function clientes():HasMany{
-        return $this->hasMany(clientes::class,'user_id');
+    public function clientes(): HasMany
+    {
+        return $this->hasMany(clientes::class, 'user_id');
+    }
+    public function saldos(): HasMany
+    {
+        return $this->hasMany(saldos::class, 'user_id');
     }
 }

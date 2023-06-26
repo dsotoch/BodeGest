@@ -18,6 +18,7 @@ class CrearEmpresas extends Seeder
         empresas::create([
             'nombre'=>'BodeGest',
             'logo'=>'Bodegest',
+            'telefono'=>'0000000'
             
         ]);
     }

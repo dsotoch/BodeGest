@@ -7,6 +7,11 @@
 
 @section("contenido")
 <div class="row m-1">
+    @if(session('mensaje'))
+    <div class="alert alert-success">
+        {{ session('mensaje') }}
+    </div>
+    @endif
 
     <div class="card p-0 col-lg-12">
         <h3 class="m-4">Mis Compras</h3>
@@ -15,7 +20,7 @@
     </div>
 
 </div>
-<form id="form-compra" enctype="multipart/form-data">
+<form id="form-compra" method="post" enctype="multipart/form-data" action="/Compras/CrearCompra">
     @csrf
     <div class="row m-1">
         <div class="card p-0 col-lg-12">
@@ -29,7 +34,7 @@
                 <div class="col-lg-6">
                     <label for="proveedor" class="form label">Proveedor</label>
                     <div id="div-proveedor">
-                        <input type="text" disabled name="proveedor" id="proveedor" autocomplete="name" class="form-control">
+                        <input type="text" readonly name="proveedor" id="proveedor" autocomplete="name" class="form-control">
                         <button class="btn btn-info" id="btn-proveedor" data-bs-toggle="modal" data-bs-target="#modal-proveedores"><i class="fas fa-search"></i></button>
                     </div>
 
@@ -42,11 +47,14 @@
             </div>
 
         </div>
-       
+
     </div>
     <div class="row m-1">
-        <div class=" card col-lg-9 p-2">
-            <div class="table-responsive">
+        <div class=" card col-lg-6 p-2">
+            <label for="" class="form-label">Comprobante</label>
+            <br>
+            <input type="file" name="comprobante" id="comprobante" class="form-control" accept="image/*">
+            <div class="table-responsive" hidden>
                 <table class="table" id="tabla-compra">
                     <thead>
                         <th id="compra-id">Id</th>
@@ -62,11 +70,17 @@
                 </table>
             </div>
         </div>
+        <div class="card col-lg-3 p-2">
+            <label for="fecha" class="form-label">Fecha de la Compra</label>
+            <input type="date" name="fecha" id="fecha" class="form-control">
+            <hr>
+            <label for="total-compra" class="form-label">Total Compra</label>
+            <input type="text" name="total-compra" id="total-compra" class="form-control">
+        </div>
         <div class="card col-lg-3">
             <div id="div-opcion-botones" class="p-2">
                 <label for="" class="form-label">Panel de Opciones</label>
                 <br>
-                <button class="btn btn-danger" id="ver-productos" data-bs-toggle="modal" data-bs-target="#modal-productos">Ver Productos</button>
                 <button class="btn btn-success" id="registrar-compra" type="submit">Registrar Compra</button>
             </div>
         </div>

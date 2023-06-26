@@ -49,7 +49,11 @@ $(document).on('click', "#btn-enviar-producto", function () {
     let stock = $(row.find('td')[3]).text();
     let precioVenta = $(row.find('td')[5]).text();
     let presentacion = $(row.find('td')[2]).text();
+    if($("#cantidad").val() > stock){
+        swal.fire({ title: 'Opps.', text: "La cantidad es mayor que el Stock del Producto", icon: 'warning' });
 
+        return false;
+    }
     if ($("#cantidad").val() == "" || $("#cantidad").val() <= 0) {
         $("#cantidad").focus();
         swal.fire({ title: 'Opps.', text: "Ingresa una Cantidad Valida y luego Selecciona el Producto", icon: 'warning' });

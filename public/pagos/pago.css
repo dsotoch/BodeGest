@@ -1,0 +1,35 @@
+.titulo-tarjetas {
+    background-color: red;
+    color: white;
+    padding: 1rem;
+}
+
+.credit {
+    border-right: 1px solid black;
+}
+
+.texto {
+    color: black;
+    font-size: 0.8rem;
+}
+
+.br {
+    border-right: 1px solid black;
+}
+
+.sctn-row {
+    text-align: right;
+    padding-bottom: 1rem;
+}
+
+.flex{
+    display: flex;
+    align-content:flex-start ;
+}
+
+.cpago{
+    background-color: green !important;
+    font-size: 1rem;
+    color: white !important;
+    font-weight: bold;
+}

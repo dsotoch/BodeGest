@@ -121,6 +121,9 @@ $(document).on('click', '#registrar-compra', function (e) {
     e.preventDefault();
     let metodo = $("#metodo").val();
     var total = 0.0;
+    let fecha = $("#fecha").val();
+    let comprobante = $("#comprobante").val();
+    let total_compra=$("#total-compra").val();
     $("#tabla-compra tr").each(function () {
         $(this).find('td:last-child').each(function () {
             total += parseFloat($(this).text());
@@ -136,31 +139,23 @@ $(document).on('click', '#registrar-compra', function (e) {
 
         return;
     }
-    if (productos.length <= 0) {
-        error("Esta Compra no Tiene Productos");
+    if (fecha == "") {
+        error("Selecciona una Fecha Valida");
 
         return;
     }
+    if (comprobante == "") {
+        error("Selecciona un Comprobante");
 
+        return;
+    }
+    if (total_compra == "") {
+        error("Rellena el total de la Compra");
 
-    let datos = {
-        metodo: metodo,
-        total: total,
-        productos: productos,
-        proveedor: id_proveedor_compra,
-    };
+        return;
+    }
+    $("#form-compra").submit();
 
-    $.ajax({
-        method: 'get',
-        url: '/Compras/CrearCompra',
-        data: datos,
-
-        dataType: 'json',
-        success: function (response) {
-            window.location.href = response.url;
-        }
-
-    });
 
 });
 
