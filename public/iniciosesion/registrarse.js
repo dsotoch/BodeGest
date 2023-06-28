@@ -2,17 +2,27 @@
 $(document).on('click', '#btn-modal-registrarse', function () {
     $("#exampleModal").modal('show');
 });
+$(document).on('click', '#pass-ol', function () {
+    Swal.fire({
+        title: 'Importante!',
+        text: 'Comunicate a este numero de WhatsApp +51 916715991 para Recuperar tu Contraseña , ten a la mano tu DNI fisico!',
+        icon: 'info',
+        confirmButtonText: "De Acuerdo"
+    }
+    )
+});
 
-$(document).on('click', '#btn-registrarse', function (e) {
-    e.preventDefault();
+$(document).on('click', '#btn-registrarse', function () {
     let nombres = $("#modal-auth-name").val();
     let apellidos = $("#modal-auth-apellidos").val();
     let telefono = $("#modal-auth-telefono").val();
     let email = $("#modal-auth-email").val();
     let password = $("#modal-auth-password").val();
+    let dni = $("#modal-auth-dni").val();
+
     let terminos = $("#modal-auth-register-checkbox");
     let csrf_token = $("#registrarse input[name='_token']").val();
-    if (nombres == "" || apellidos == "" || telefono == "" || email == "" || password == "") {
+    if (nombres == "" || apellidos == "" || telefono == "" || email == "" || password == "" || dni == "") {
         Swal.fire(
             'ERROR!',
             'Complete Todos Los Campos!',
@@ -31,7 +41,7 @@ $(document).on('click', '#btn-registrarse', function (e) {
             $.ajax({
                 type: "GET",
                 url: "/Login/Registrarse",
-                data: { nombres: nombres, apellidos: apellidos, telefono: telefono, email: email, password: password, _token: csrf_token },
+                data: { dni: dni, nombres: nombres, apellidos: apellidos, telefono: telefono, email: email, password: password, _token: csrf_token },
                 dataType: "json",
                 success: function (response) {
                     if (response == 'EXISTE') {
@@ -40,10 +50,11 @@ $(document).on('click', '#btn-registrarse', function (e) {
                             'El Correo Electronico ya se Encuentra Registrado!',
                             'error'
                         )
+
                     } else {
                         Swal.fire(
                             email,
-                            'Revise su Correo Electrónico para Confirmar su Cuenta! Antes es Momento de Elegir un Plan',
+                            'Revise su Correo Electrónico para Confirmar su Cuenta! Inicia Sesion para Elegir un Plan',
                             'warning'
                         ).then(function () {
                             $("#exampleModal").modal('hide');

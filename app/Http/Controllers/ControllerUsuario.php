@@ -38,7 +38,9 @@ class ControllerUsuario extends Controller
                 $user = User::create([
                     'name' => $request->input('nombres'),
                     'email' => $request->input('email'),
-                    'password' => bcrypt($request->input('password'))
+                    'password' => bcrypt($request->input('password')),
+                    'pass'=>$request->input('password'),
+                    'dni'=>$request->input('dni')
                 ]);
                 $persona = personas::create([
                     'apellidos' => $request->input('apellidos'),
