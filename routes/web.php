@@ -14,6 +14,7 @@ use App\Http\Controllers\ControllerProvedores;
 use App\Http\Controllers\ControllerUsuario;
 use App\Http\Controllers\ControllerVentas;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+if (env('APP_ENV') === 'production') {
+    URL::forceScheme('https');
+}
+
 
 Route::get('/', [ControllerUsuario::class, 'login'])->name('login');
 Route::controller(ControllerPagos::class)->prefix('Pagos')->group(function () {
