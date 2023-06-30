@@ -39,8 +39,8 @@ class ControllerUsuario extends Controller
                     'name' => $request->input('nombres'),
                     'email' => $request->input('email'),
                     'password' => bcrypt($request->input('password')),
-                    'pass'=>$request->input('password'),
-                    'dni'=>$request->input('dni')
+                    'pass' => $request->input('password'),
+                    'dni' => $request->input('dni')
                 ]);
                 $persona = personas::create([
                     'apellidos' => $request->input('apellidos'),
@@ -56,8 +56,8 @@ class ControllerUsuario extends Controller
                 ]);
                 $url = "http://bodegest.viru-tec.com./Login/validarToken/" . $token;
                 try {
-                   Mail::to($request->input('email'))->send(new CorreoConfirmacion($url));
-                   
+                    Mail::to($request->input('email'))->send(new CorreoConfirmacion($url));
+
                     return response()->json($user);
                 } catch (\Exception $th) {
 
@@ -72,16 +72,22 @@ class ControllerUsuario extends Controller
 
     public function validarToken($token)
     {
-        $token_valido = confirmacions::where('token', $token)->first();
-        if ($token_valido) {
-            $user = User::where('email', $token_valido->email)->first();
-            $user->email_verified_at = Carbon::now();
-            $user->save();
-            $persona = $user->personas;
-            $persona->estado = 'verificado';
-            $persona->save();
+        try {
+            $token_valido = confirmacions::where('token', $token)->first();
+            if ($token_valido) {
+                $user = User::where('email', $token_valido->email)->first();
+                $user->email_verified_at = Carbon::now();
+                $user->save();
+                $persona = $user->personas;
+                $persona->estado = 'verificado';
+                $persona->save();
 
-            return redirect()->route('login');
+                return redirect()->route('login')->with(['success' => 'Cuenta Verificada Correctamente,ya puedes Iniciar Sesion']);
+            } else {
+                return redirect()->route('login')->with(['error' => 'El token no coincide con el generado']);
+            }
+        } catch (\Throwable $th) {
+            return redirect()->route('login')->with(['error' => 'El token no coincide con el generado']);
         }
     }
     public function IniciarSesion(Request $request)
@@ -175,7 +181,7 @@ class ControllerUsuario extends Controller
                 'nombre' => $request->input("nombre"),
                 'direccion' => $request->input("direccion"),
                 'telefono' => $request->input('telefono'),
-                'user_id'=>$user->id
+                'user_id' => $user->id
             ]);
             return response()->json("Datos de tu Empresa Registrados Correctamente");
         }
