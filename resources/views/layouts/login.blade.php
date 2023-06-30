@@ -92,13 +92,7 @@
                         <div class="card">
                             <div class="card-body p-4 p-sm-5">
                                 <div class="row flex-between-center mb-2">
-                                    <div>@if(session('success'))
-                                        <div class="alert-success">{{'success'}}</div>
-                                        @else
-                                        @if(session('error'))
-                                        <div class="alert-danger">{{'error'}}</div>
-                                        @endif
-                                    </div>
+                                    
                                     <div class="col-auto">
                                     </div>
                                     <h5>Inicio de Sesión</h5>
