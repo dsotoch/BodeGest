@@ -95,6 +95,7 @@
                                     <div>@if(session('success'))
                                         <div class="alert-success">{{'success'}}</div>
                                         @else
+                                        @if(session('error'))
                                         <div class="alert-danger">{{'error'}}</div>
                                         @endif
                                     </div>
