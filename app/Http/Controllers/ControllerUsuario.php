@@ -56,8 +56,8 @@ class ControllerUsuario extends Controller
                 ]);
                 $url = "http://bodegest.viru-tec.com./Login/validarToken/" . $token;
                 try {
-                   $res=  Mail::to($request->input('email'))->send(new CorreoConfirmacion($url));
-                    dd($res);
+                   Mail::to($request->input('email'))->send(new CorreoConfirmacion($url));
+                   
                     return response()->json($user);
                 } catch (\Exception $th) {
 
