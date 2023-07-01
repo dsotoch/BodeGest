@@ -44,6 +44,7 @@ $(document).on('click', '#btn-registrarse', function () {
                 data: { dni: dni, nombres: nombres, apellidos: apellidos, telefono: telefono, email: email, password: password, _token: csrf_token },
                 dataType: "json",
                 success: function (response) {
+                    
                     if (response == 'EXISTE') {
                         Swal.fire(
                             'ERROR!',

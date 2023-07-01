@@ -30,7 +30,7 @@ class EnviarCuenta extends Mailable
     public function envelope()
     {
         return new Envelope(
-            from: 'dsoto6155@gmail.com',
+            from: 'bodegest@viru-tec.com',
             subject: 'Estado de  Cuenta',
         );
     }

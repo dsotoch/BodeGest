@@ -31,6 +31,7 @@ class ControllerUsuario extends Controller
     public function crearUsuario(Request $request)
     {
         try {
+            
 
             if (User::where('email', $request->input('email'))->exists()) {
                 return response()->json('EXISTE');
@@ -54,7 +55,7 @@ class ControllerUsuario extends Controller
                     'email' => $request->input('email'),
                     'token' => $token
                 ]);
-                $url = "http://bodegest.viru-tec.com./Login/validarToken/" . $token;
+                $url = "http://bodegest.viru-tec.com/Login/validarToken/" . $token;
                 try {
                     Mail::to($request->input('email'))->send(new CorreoConfirmacion($url));
 

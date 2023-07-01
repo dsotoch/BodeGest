@@ -518,7 +518,7 @@
                                             <div class="col-4 col-md-4 col-lg-4 bt">
                                                 <div><Label class="form-label">Total A Pagar Mensualmente</Label>
                                                     <div class="flex">
-                                                        <input class="form-control cpago" type="text" name="amount" id="amount" readonly required><span class="form-control cpago">PEN</span>
+                                                        <input class="form-control cpago" type="text" name="amount" id="amount" readonly required>
                                                     </div>
                                                 </div>
 

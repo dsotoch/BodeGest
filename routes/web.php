@@ -13,6 +13,7 @@ use App\Http\Controllers\ControllerPrincipal;
 use App\Http\Controllers\ControllerProvedores;
 use App\Http\Controllers\ControllerUsuario;
 use App\Http\Controllers\ControllerVentas;
+use App\Http\Controllers\ControllerWebhook;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 
@@ -31,7 +32,7 @@ if (env('APP_ENV') === 'production') {
     URL::forceScheme('https');
 }
 
-
+Route::post('/webhook', [ControllerWebhook::class,'handle']);
 Route::get('/', [ControllerUsuario::class, 'login'])->name('login');
 Route::controller(ControllerPagos::class)->prefix('Pagos')->group(function () {
 
