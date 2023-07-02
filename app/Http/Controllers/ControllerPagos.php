@@ -14,20 +14,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Openpay\Data\Openpay;
-use Openpay\Resources\OpenpayCard;
-use Openpay\Resources\OpenpayCharge;
-use Openpay\Resources\OpenpayCustomer;
-use Openpay\Resources\OpenpayCustomerList;
-use Openpay\Resources\OpenpayPlan;
-use Openpay\Resources\OpenpaySubscription;
-use PhpParser\Node\Expr\Cast\Object_;
-use PhpParser\Node\Stmt\TryCatch;
+
 
 class ControllerPagos extends Controller
 {
     private function instanciaopen()
     {
-        return   Openpay::getInstance('md1kxv1stwedhorbloo6', 'sk_ad214517ab8a4d8bad4d39c2a88c3321', 'PE');
+        $openpay = Openpay::getInstance(env('OPENPAY_MERCHANT_ID'), env('OPENPAY_PRIVATE_KEY'), 'PE');
+        $openpay->setProductionMode(env('OPEN_PRODUCTION'));
+
+        return $openpay;
     }
     public function crear_cargo_plan_basico(Request $request)
     {
@@ -36,7 +32,7 @@ class ControllerPagos extends Controller
         $openpay = $this->instanciaopen();
         $token_id = $request->input('token_id');
         $deviceIdHiddenFieldName = $request->input('deviceIdHiddenFieldName');
-        $plan = $openpay->plans->get('phdtgyg9tkgbmp72aena');
+        $plan = $openpay->plans->get(env('PLAN_OPEN'));
         $cliente_basico = $this->crearClienteBasico($user, $persona, $openpay);
         $card = $this->agregar_tarjeta_a_cliente($token_id, $deviceIdHiddenFieldName, $cliente_basico);
         if (!is_string($card)) {
@@ -141,7 +137,7 @@ class ControllerPagos extends Controller
     private function suscribir_a_cliente($cliente_basico, $card)
     {
         try {
-            $planId = 'phdtgyg9tkgbmp72aena';
+            $planId = env('PLAN_OPEN');
             $subscription = $cliente_basico->subscriptions->add([
                 'plan_id' => $planId,
                 'card_id' => $card->id
@@ -162,6 +158,8 @@ class ControllerPagos extends Controller
                 'description' => 'Cargo Inicial para Validez de Tarjeta',
                 'device_session_id' => $deviceIdHiddenFieldName
             ));
+
+
             return $charge;
         } catch (\Exception $th) {
             return $th->getMessage();
@@ -208,6 +206,10 @@ class ControllerPagos extends Controller
     function cancel()
     {
         return view('pagos/errorbasico');
+    }
+    function cancelaw()
+    {
+        return view('pagos/errorwebhookbasico');
     }
     function success()
     {

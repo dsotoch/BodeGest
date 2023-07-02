@@ -1,0 +1,77 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+.title{
+    font-size: 2rem !important;
+    color: blue;
+}
+.cabecera{
+    display: flex;
+    justify-content: flex-start;
+}
+.principal {
+    width: 100%;
+    height: 100%;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 10%;
+
+    background: linear-gradient(red, blue);
+}
+.logo{
+    width: 100px;
+    height: 100px;
+}
+#sus{
+    border-radius: 10px;
+    background-color: red;
+    color: white;
+    padding: 1rem;
+}
+.titulo-tarjetas {
+    background-color: orangered;
+    color: white;
+    padding: 1rem;
+}
+
+.credit {
+    border-right: 1px solid black;
+}
+
+.texto {
+    color: black;
+    font-size: 0.8rem;
+}
+
+.br {
+    border-right: 1px solid black;
+}
+
+.sctn-row {
+    text-align: right;
+    padding-bottom: 1rem;
+}
+
+.flex {
+    display: flex;
+    align-content: flex-start;
+}
+
+.cpago {
+    background-color: orangered !important;
+    font-size: 1rem;
+    color: white !important;
+    font-weight: bold;
+}
+
+.form {
+    padding: 100px;
+}
+
+@media screen and (max-width: 767px) {
+    .contenido {
+        padding: 0;
+
+    }
+}

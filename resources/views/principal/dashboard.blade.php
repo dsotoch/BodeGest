@@ -1,6 +1,7 @@
 @extends('layouts.base')
 @section("estilos")
 <link rel="stylesheet" href="{{asset('dashboard/dashboard.css')}}">
+
 @endsection
 @section('contenido')
 <div class="row g-3 mb-3">
@@ -46,10 +47,20 @@
         </div>
 
     </div>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+        Abrir Modal
+    </button>
+
+    <!--modal-lincencia-->
+    
+
 </div>
 @endsection
 @section("scripts")
-<script src="{{asset('jquery.js')}}"></script>
 
+<script src="{{asset('jquery.js')}}"></script>
 <script src="{{asset('dashboard/dashboard.js')}}"></script>
+<script src="{{asset('pagos/webhoot.js')}}"></script>
+
 @endsection

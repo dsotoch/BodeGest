@@ -31,13 +31,21 @@ use Illuminate\Support\Facades\URL;
 if (env('APP_ENV') === 'production') {
     URL::forceScheme('https');
 }
+Route::controller(ControllerWebhook::class)->prefix('Webhook')->group(function () {
+    Route::get('verificate','handle');
+    Route::get('renew_payment','renew_payment')->name('ren_pay');
+    Route::post('renew','renew');
 
-Route::post('/webhook', [ControllerWebhook::class,'handle']);
+
+});
+
 Route::get('/', [ControllerUsuario::class, 'login'])->name('login');
 Route::controller(ControllerPagos::class)->prefix('Pagos')->group(function () {
 
     Route::post('CrearCargo', 'crear_cargo_plan_basico');
     Route::get('cancel', 'cancel')->name('errorbasico');
+    Route::get('cancelw', 'cancelaw')->name('errorbasicowebhook');
+
     Route::get('success', 'success')->name('successbasico');
     Route::get('agregarTarjeta', 'asignarTarjeta');
 });
