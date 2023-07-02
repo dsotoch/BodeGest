@@ -11,7 +11,7 @@ function footer() {
 }
 footer();
 window.addEventListener("resize", footer);
-
+$("#guardarempresa").prop('disabled',true);
 $(document).on('click', '#guardarempresa', function () {
     let ruc = $("#ruc").val();
     let nombre = $("#nombre").val();
@@ -28,6 +28,7 @@ $(document).on('click', '#guardarempresa', function () {
             dataType: "json",
             success: function (response) {
                 Swal.fire("Confirmación",response, "success");
+                $("#guardarempresa").prop('disabled',true);
             }
         });
     }
@@ -51,6 +52,7 @@ $(document).on('click', '#verempresa', function () {
                 $("#direccion").val(response.direccion);
                 $("#telefono").val(response.telefono);
             }
+            $("#guardarempresa").prop('disabled',false);
         }
     });
 });

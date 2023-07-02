@@ -303,7 +303,7 @@
 
                     </div>
                     <br>
-                    <center><button class="btn btn-warning" id="verempresa">Ver</button> <button class="btn btn-primary" id="guardarempresa">Guardar</button></center>
+                    <center><button class="btn btn-warning" id="verempresa" title="Click para poder Guardar">Ver</button> <button class="btn btn-primary" id="guardarempresa">Guardar</button></center>
 
                 </div>
             </div>

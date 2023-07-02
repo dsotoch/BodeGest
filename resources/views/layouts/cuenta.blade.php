@@ -8,7 +8,7 @@
         </div>
 
         <!--/.bg-holder-->
-        @if($empresa->logo)
+        @if($empresa)
         <div class="avatar avatar-5xl avatar-profile"><img class="rounded-circle img-thumbnail shadow-sm" src="{{ asset('imagenes/personas/' . $empresa->logo) }}" width="200" alt=""></div>
         @else
         <div class="avatar avatar-5xl avatar-profile"><img class="rounded-circle img-thumbnail shadow-sm" src="{{ asset('falcon/public/assets/img/team/2.jpg') }}" width="200" alt=""></div>
@@ -21,7 +21,12 @@
                 <div class="alert alert-success">
                     {{session('mensaje')}}
                 </div>
-
+                @else
+                @if(session('error'))
+                <div class="alert alert-danger">
+                    {{session('error')}}
+                </div>
+                @endif
                 @endif
             </div>
             <div class="col-lg-8">
@@ -44,7 +49,7 @@
 
                     <div class="flex-1">
                         <h6 class="mb-0">Cambiar Foto</h6>
-                        <input type="file" name="foto" id="foto" class="form-control" accept="image/*" >
+                        <input type="file" name="foto" id="foto" class="form-control" accept="image/*">
                         <label for="" class="form-label alert-success">Se Recomienda una imagen de 512x512</label>
 
 

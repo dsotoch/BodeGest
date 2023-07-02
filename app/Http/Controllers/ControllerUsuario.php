@@ -136,6 +136,7 @@ class ControllerUsuario extends Controller
         $user = Auth::user();
         $persona = personas::where('user_id', $user->id)->first();
         $empresa = empresas::where('user_id', $user->id)->first();
+        
         return view('layouts/cuenta', ['user' => $user, 'persona' => $persona, 'empresa' => $empresa]);
     }
     public function modificar_cuenta(Request $request)
@@ -144,24 +145,29 @@ class ControllerUsuario extends Controller
         $user = Auth::user();
         $persona = personas::where('user_id', $user->id)->first();
         $empresa = empresas::where('user_id', $user->id)->first();
-
-        if (File::exists(public_path($empresa->logo))) {
-            File::delete(public_path($empresa->logo));
+        if($empresa==null){
+            return redirect()->route('micuenta')->with(['error' => 'Ingresa primero los datos de tu empresa desde el panel de Personalizar de la parte derecha']);
+        }else{
+            if (File::exists(public_path($empresa->logo))) {
+                File::delete(public_path($empresa->logo));
+            }
+            if ($request->hasFile('foto')) {
+                $nombre_imagen = time() . $request->file('foto')->getClientOriginalName();
+                $comprimir_imagen = Image::make($request->file('foto'))->encode('jpg', 80);
+                $comprimir_imagen->resize(512, 512);
+                $comprimir_imagen->save(public_path('imagenes/personas/') . $nombre_imagen);
+                $empresa->logo = $nombre_imagen;
+                $empresa->save();
+            }
+            $persona->telefono = $request->input('telefono');
+            $persona->save();
+    
+            return redirect()->route('micuenta')->with(['mensaje' => 'Tu Operación Fue Exitosa']);
         }
-        if ($request->hasFile('foto')) {
-            $nombre_imagen = time() . $request->file('foto')->getClientOriginalName();
-            $comprimir_imagen = Image::make($request->file('foto'))->encode('jpg', 80);
-            $comprimir_imagen->resize(512, 512);
-            $comprimir_imagen->save(public_path('imagenes/personas/') . $nombre_imagen);
-            $empresa->logo = $nombre_imagen;
-            $empresa->save();
-        }
+        
 
 
-        $persona->telefono = $request->input('telefono');
-        $persona->save();
-
-        return redirect()->route('micuenta')->with(['mensaje' => 'Tu Operación Fue Exitosa']);
+      
     }
 
 
