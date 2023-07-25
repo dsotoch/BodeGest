@@ -1,4 +1,7 @@
 @extends("layouts.base")
+@section("estilos")
+<link rel="stylesheet" href="{{asset('cuentas/cuenta.css')}}">
+@endsection
 @section("contenido")
 <div class="card mb-3">
     <div class="card-header position-relative min-vh-25 mb-7">
@@ -42,6 +45,9 @@
                 <h6 class="fs-0 fw-normal">Telefono => {{$persona->telefono}}</h6>
                 <p class="text-500">Unido desde => {{$user->email_verified_at}}</p>
                 <div class="border-dashed-bottom my-4 d-lg-none"></div>
+
+                <hr>
+                <button class="btn btn-danger" id="btn-cancelar">Cancelar Subscripción</button>
             </div>
             <form action="/Login/ModificarCuenta" id="form-cuenta" method="post" enctype="multipart/form-data" class="col-lg-4">
                 @csrf
@@ -59,7 +65,7 @@
                         <h6 class="mb-0">Cambiar Telefono</h6>
                         <input type="text" name="telefono" id="telefono" class="form-control" autofocus required>
                         <hr>
-                        <center><Button class="btn btn-danger" type="submit"> Registrar</Button></center>
+                        <center><Button class="btn btn-success" type="submit"> Registrar</Button></center>
                     </div>
 
 
@@ -69,9 +75,26 @@
             </form>
             <div class="col-lg-12">
                 <hr>
-                <h5>Mis Movimientos</h5>
-                <table class="table"></table>
+                <h5>Mi Suscripción</h5>
+                <table class="table" id="tb-movi">
+                    <thead>
+                        <th>Estado</th>
+                        <th>Suscripción</th>
+                        <th>Costo</th>
+                        <th>Periodo</th>
+                        <th>Fecha Fin</th>
+
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
             </div>
         </div>
     </div>
+    @endsection
+    @section("scripts")
+    <script src="{{asset('vendor/sweetalert/sweetalert.all.js')}}"></script>
+
+    <script src="{{asset('jquery.js')}}"></script>
+    <script src="{{asset('cuentas/cuenta.js')}}"></script>
     @endsection

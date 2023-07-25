@@ -35,6 +35,8 @@ Route::controller(ControllerWebhook::class)->prefix('Webhook')->group(function (
     Route::get('verificate','handle');
     Route::get('renew_payment','renew_payment')->name('ren_pay');
     Route::post('renew','renew');
+    Route::get('movimientos','datos_pago_cliente');
+    Route::get('cancel','cancelar_subscripcion');
 
 
 });

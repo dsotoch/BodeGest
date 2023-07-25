@@ -6,20 +6,19 @@ use App\Models\pagos;
 use App\Models\personas;
 use App\Models\suscripcions;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Openpay\Data\Openpay;
+use Carbon\Carbon;
+
 
 class ControllerWebhook extends Controller
 {
     private function instanciaopen()
     {
+        
         $openpay = Openpay::getInstance(env('OPENPAY_MERCHANT_ID'), env('OPENPAY_PRIVATE_KEY'), 'PE');
-        $openpay->setProductionMode(env('OPEN_PRODUCTION'));
-
         return $openpay;
     }
     public function handle(Request $request)
@@ -255,5 +254,34 @@ class ControllerWebhook extends Controller
     function success()
     {
         return view('pagos/exitobasico');
+    }
+    function datos_pago_cliente()
+    {
+        $user = Auth::user();
+        $subscription = suscripcions::where('user_id', $user->id)->where('estado', 'active')->first();
+        return response()->json($subscription);
+    }
+    function cancelar_subscripcion()
+    {
+        try {
+            $user = Auth::user();
+            $subscription = suscripcions::where('user_id', $user->id)->where('estado', 'active')->first();
+            $openpay = $this->instanciaopen();
+            $customerList = $openpay->customers->getList(['external_id' => $user->email]);
+            $customer = $openpay->customers->get($customerList[0]->id);
+            $subsscription = $customer->subscriptions->get($subscription->suscripcion_id);
+            $res=$subsscription->delete();
+            
+                $subscription->estado="cancelada";
+                $subscription->save();
+                $persona=personas::where('user_id',$user->id)->first();
+                $persona->plan='SIN PLAN';
+                $persona->save();
+              
+            return response()->json(true);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage());
+
+        }
     }
 }

@@ -8,20 +8,18 @@ use App\Models\planes;
 use App\Models\suscripcion;
 use App\Models\suscripcions;
 use App\Models\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Openpay\Data\Openpay;
-
+use Carbon\Carbon;
 
 class ControllerPagos extends Controller
 {
     private function instanciaopen()
     {
         $openpay = Openpay::getInstance(env('OPENPAY_MERCHANT_ID'), env('OPENPAY_PRIVATE_KEY'), 'PE');
-        $openpay->setProductionMode(env('OPEN_PRODUCTION'));
 
         return $openpay;
     }
