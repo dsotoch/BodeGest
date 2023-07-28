@@ -258,7 +258,10 @@ class ControllerWebhook extends Controller
     function datos_pago_cliente()
     {
         $user = Auth::user();
-        $subscription = suscripcions::where('user_id', $user->id)->where('estado', 'active')->first();
+        $subscription = suscripcions::where('user_id', $user->id) ->where(function ($query) {
+            $query->where('estado', 'active')
+                  ->orWhere('estado', 'trial');
+        })->first();
         return response()->json($subscription);
     }
     function cancelar_subscripcion()
