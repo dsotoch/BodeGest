@@ -46,7 +46,7 @@
             <label for="" class="form-control btn-success" id="proveedor">SIN BUSQUEDA </label>
         </div>
         <hr>
-        <div class="col-12">
+        <div class="col-12 table-responsive">
             <center>
                 <h5>Comprobante</h5>
                 <canvas id="imagen">
