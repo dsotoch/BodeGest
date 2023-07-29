@@ -19,7 +19,6 @@ $(window).on('load', function () {
                     let m_venta = 0.0;
                     let ventas = datos[4];
                     let compras = datos[3];
-                    console.log(compras.compras);
 
                     $.each(response, function (indexInArray, valueOfElement) {
                         $.each(valueOfElement[0], function (indexInArray, valueOfElement) {
@@ -47,7 +46,10 @@ $(window).on('load', function () {
                         ref_ul_compras.empty();
                         ref_ul_compras.append('<li class="btn-danger"> No Hay Compras en el Rango de Fechas Seleccionado </li>')
                     }else{
-                        console.log(compras.compras);
+                        ref_ul_ventas.empty();
+                        $.each(compras.compras, function (indexInArray, valueOfElement) {
+                            ref_ul_ventas.append('<li> ' + valueOfElement.id + '/ ' + valueOfElement.fecha + '/ ' + valueOfElement.provedor +  '/ monto => ' + ' ' + valueOfElement.totalCompra + ' </li>')
+                        });
                     }
                     $("#f-termino").val(fecha);
                     $("#monto-compra").text(parseFloat(m_compra).toFixed(2));
