@@ -76,17 +76,19 @@
             <div class="col-lg-12">
                 <hr>
                 <h5>Mi Suscripción</h5>
-                <table class="table" id="tb-movi">
-                    <thead>
-                        <th>Estado</th>
-                        <th>Suscripción</th>
-                        <th>Costo</th>
-                        <th>Periodo</th>
-                        <th>Fecha Fin</th>
+                <div class="table-responsive">
+                    <table class="table" id="tb-movi">
+                        <thead>
+                            <th>Estado</th>
+                            <th>Suscripción</th>
+                            <th>Costo</th>
+                            <th>Periodo</th>
+                            <th>Fecha Fin</th>
 
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
 
             </div>
         </div>

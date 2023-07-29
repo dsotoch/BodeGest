@@ -179,7 +179,7 @@ class ControllerWebhook extends Controller
     {
         try {
             $user = Auth::user();
-            $bd_suscription = suscripcions::where('user_id', $user->id)->where('estado', 'unpaid')->first();
+            $bd_suscription = suscripcions::where('user_id', $user->id)->where('estado','unpaid')->first();
             $op_subscripcion = $cliente_basico->subscriptions->get($bd_suscription->suscripcion_id);
             $op_subscripcion->card = $card->id;
             $op_subscripcion->save();
@@ -268,7 +268,9 @@ class ControllerWebhook extends Controller
     {
         try {
             $user = Auth::user();
-            $subscription = suscripcions::where('user_id', $user->id)->where('estado', 'active')->first();
+            $subscription = suscripcions::where('user_id', $user->id)->where(function($query){
+                $query->where('estado', 'active')->orWhere('estado','trial');
+            })->first();
             $openpay = $this->instanciaopen();
             $customerList = $openpay->customers->getList(['external_id' => $user->email]);
             $customer = $openpay->customers->get($customerList[0]->id);

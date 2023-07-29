@@ -16,16 +16,16 @@
             @csrf
             <div class="card-body">
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-6 col-md-4">
                         <label for="f-inicio">Fecha de Termino del Balance Anterior</label>
                         <input type="text" name="f-anterior" id="f-anterior" class="form-control btn-info" value="{{$anterior->format('d-m-Y')}}" readonly>
                     </div>
-                    <div class="col-3">
+                    <div class="col-6 col-md-3">
                         <label for="">Saldo en Caja</label>
 
                         <label for="" class="form-control btn-warning" id="saldo-caja">{{$saldo}}</label>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 col-md-5">
                         <label for="r-periodo">Periodo de Balance</label>
                         <select name="periodo" id="periodo" class="form-select">
                             <option value="0" selected>Seleccione un Periodo</option>
@@ -39,23 +39,23 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-3 col-lg-3">
+                    <div class="col-6 col-lg-3">
                         <div class="t-r">
                             <label for="f-inicio">Fecha de Inicio del Nuevo Balance</label>
                             <input type="text" name="f-inicio" id="f-inicio" class="form-control btn-success" value="{{$ultimo->format('d-m-Y')}}" readonly>
                         </div>
                     </div>
-                    <div class="col-3 col-lg-3">
+                    <div class="col-6 col-lg-3">
                         <div class="t-r">
                             <label for="f-termino">Fecha de Termino del Nuevo Balance</label>
                             <input type="text" name="f-termino" id="f-termino" class=" form-control btn-danger" readonly>
                         </div>
                     </div>
-                    <div class="col-3 col-lg-3">
+                    <div class="col-6 col-lg-3">
                         <label for="">Total compras</label><br>
                         <label class="montos" id="monto-compra">0.0</label>
                     </div>
-                    <div class="col-3 col-lg-3">
+                    <div class="col-6 col-lg-3">
                         <label for="">Total Ventas</label> <br>
                         <label class="montos" id="monto-venta">0.0</label>
                     </div>
@@ -64,7 +64,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-6 col-md-4 col-lg-4">
 
                                 <h6>Todas las Compras</h6>
                                 <hr>
@@ -72,7 +72,7 @@
                                 </ul>
 
                             </div>
-                            <div class="col-4">
+                            <div class="col-6 col-md-4 col-lg-4">
 
                                 <h6>Todas las Ventas</h6>
                                 <hr>
@@ -81,7 +81,7 @@
                                 </ul>
 
                             </div>
-                            <div class="col-4">
+                            <div class="col-12 col-md-4 col-lg-4">
                                 <div class="card">
                                     <div class="card-body">
                                         <h6>Panel de Opciones</h6>
