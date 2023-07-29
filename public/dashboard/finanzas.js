@@ -46,9 +46,9 @@ $(window).on('load', function () {
                         ref_ul_compras.empty();
                         ref_ul_compras.append('<li class="btn-danger"> No Hay Compras en el Rango de Fechas Seleccionado </li>')
                     }else{
-                        ref_ul_ventas.empty();
+                        ref_ul_compras.empty();
                         $.each(compras.compras, function (indexInArray, valueOfElement) {
-                            ref_ul_ventas.append('<li> ' + valueOfElement.id + '/ ' + valueOfElement.fecha + '/ ' + valueOfElement.provedor +  '/ monto => ' + ' ' + valueOfElement.totalCompra + ' </li>')
+                            ref_ul_compras.append('<li> ' + valueOfElement.id + '/ ' + valueOfElement.fecha + '/ ' + valueOfElement.provedor +  '/ monto => ' + ' ' + valueOfElement.totalCompra + ' </li>')
                         });
                     }
                     $("#f-termino").val(fecha);
