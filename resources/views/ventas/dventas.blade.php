@@ -1,6 +1,11 @@
 @extends('layouts.base')
 @section("estilos")
-
+<style>
+    .flex{
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>
 @endsection
 
 @section("contenido")
@@ -13,14 +18,17 @@
 
         <div class="col-6">
             <label for="c-venta" class="form-label">Ingrese el Codigo de Venta </label>
+            <div class="flex">
             <input type="text" id="c-venta" class="form-control">
-            <label for="" id="mensaje" style="color: red;">Pulse Enter para Buscar</label>
+            <button class="btn btn-info" id="c-ventas"> <i class="fas fa-search"></i></button>
+            </div>
+            
         </div>
         <div class="col-6">
             <label for="" class="form-label">Estado de la Venta</label>
             <label for="" class="form-control btn-success" id="estado_venta">SIN BUSQUEDA </label>
         </div>
-        <div class="col-12">
+        <div class="col-12 table-responsive">
 
             <table class="table">
                 <thead>

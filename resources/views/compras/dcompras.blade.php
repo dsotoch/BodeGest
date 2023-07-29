@@ -1,6 +1,11 @@
 @extends('layouts.base')
 @section("estilos")
-
+<style>
+    .flex{
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>
 @endsection
 
 @section("contenido")
@@ -18,19 +23,22 @@
 
         </div>
         <hr>
-        <div class="col-4">
+        <div class="col-12 col-md-4 col-lg-4">
             <label for="c-venta" class="form-label">Ingrese el Codigo de la Compra </label>
+            <div class="flex">
             <input type="text" id="c-compra" class="form-control">
-            <label for="" id="mensaje" style="color: red;">Pulse Enter para Buscar</label>
+            <button id="c-compras" class="btn btn-info"> <i class="fas fa-search"></i></button>
+            </div>
+           
         </div>
-        <div class="col-4">
+        <div class="col-6 col-md-4 col-lg-4">
             <label for="" class="form-label">Metodo de Pago</label>
             <label for="" class="form-control btn-success" id="metodo_pago">SIN BUSQUEDA </label>
             <hr>
             <label for="" class="form-label">Total Compra</label>
             <label for="" class="form-control btn-success" id="total_compra">SIN BUSQUEDA </label>
         </div>
-        <div class="col-4">
+        <div class="col-6 col-md-4 col-lg-4">
             <label for="" class="form-label">Fecha Compra</label>
             <label for="" class="form-control btn-success" id="fecha">SIN BUSQUEDA </label>
             <hr>
