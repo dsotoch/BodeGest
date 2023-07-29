@@ -44,6 +44,8 @@ $(window).on('load', function () {
                     if (compras.compras.length < 1) {
                         ref_ul_compras.empty();
                         ref_ul_compras.append('<li class="btn-danger"> No Hay Compras en el Rango de Fechas Seleccionado </li>')
+                    }else{
+                        console.log(compras.compras);
                     }
                     $("#f-termino").val(fecha);
                     $("#monto-compra").text(parseFloat(m_compra).toFixed(2));
