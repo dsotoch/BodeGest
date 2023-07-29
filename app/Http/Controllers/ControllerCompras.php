@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\articulos;
 use App\Models\compras;
 use App\Models\empresas;
+use App\Models\movimientos;
 use App\Models\provedores;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -67,6 +68,15 @@ class ControllerCompras extends Controller
         $compra->comprobante = $nombreunico;
         $compra->public_path = $rutaImagenComprimida;
         $compra->save();
+        movimientos::create(
+            [
+                'monto' => $request->input('total-compra'),
+                'fecha' => Carbon::parse($request->input("fecha")),
+                'operacion' => $compra->id,
+                'user_id' => $user->id,
+                'tipo' => "COMPRA",
+            ]
+        );
 
         return redirect()->route('compras')->with(['mensaje' => "Compra Numero" . " "  . $compra->id . " Registrada Correctamente"]);
     }

@@ -20,6 +20,8 @@ class ControllerHome extends Controller
     $ventas=ventas::where('user_id',$user->id)->whereDate('fecha',Carbon::now('America/Lima')->format('Y-m-d'))->sum('totalVenta');
     $saldo=number_format((doubleval($ventas)-doubleval($compras)),2);
     $movimientos=movimientos::where('user_id',$user->id)->whereDate('fecha',Carbon::now('America/Lima'))->get();
+  
+    
     return view('dashboard/home',['saldo'=>$saldo,'movimientos'=>$movimientos,'fecha'=>Carbon::now('America/Lima')->format('d-m-Y')]);
    }
 }
