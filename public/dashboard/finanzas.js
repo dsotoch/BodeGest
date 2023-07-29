@@ -19,6 +19,8 @@ $(window).on('load', function () {
                     let m_venta = 0.0;
                     let ventas = datos[4];
                     let compras = datos[3];
+                    console.log(compras.compras);
+
                     $.each(response, function (indexInArray, valueOfElement) {
                         $.each(valueOfElement[0], function (indexInArray, valueOfElement) {
                             m_compra = valueOfElement;
