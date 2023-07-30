@@ -342,7 +342,7 @@ $(document).on('click', "#btn-imprimir", function () {
         setTimeout(function () {
             popup.print();
             popup.close();
-        }, 300);
+        }, 600);
     });
 
 
