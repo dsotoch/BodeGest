@@ -333,20 +333,20 @@ $("#btn-email").click(function (e) {
         $("#email").val("");
     });
 });
-$(document).on('click', "#btn-imprimir", function () {
+function generar_window(){
     html2canvas($(".pdf")[0]).then(function (canvas) {
         let imagen = canvas.toDataURL("image/png");
         let popup = window.open("", "myPopup","scrollbars=yes,resizable=yes");
-        popup.document.write("<html><head><title>Imprimir</title><style>@media print { img { position: absolute; top: 0; } }</style></head><body><img src='" + imagen + "'/></body></html>");
+        popup.document.write("<html><head><title>Imprimir</title><style>@media print {body {margin: 0;padding: 0;display: flex;justify-content: center;align-items: center;height: 100vh;}img {max-width: 100%;max-height: 100%;}}</style></head><body><img src='" + imagen + "'/></body></html>");
         popup.document.close();
         setTimeout(function () {
             popup.print();
             popup.close();
         }, 600);
     });
-
-
-
+}
+$(document).on('click', "#btn-imprimir", function () {
+    generar_window();
 });
 
 

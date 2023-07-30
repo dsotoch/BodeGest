@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{asset('ventas/detalles.css')}}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
 
     <div id="pr">
         @if (session('mensaje'))
-        <div class="alert alert-success" >
+        <div class="alert alert-success">
             {{ session('mensaje') }}
         </div>
         @else
@@ -108,7 +109,7 @@
                     <table class="tb-producto">
                         <thead>
                             <tr class="title">
-                                <td class="td-10">Cantidad</td>
+                                <td class="td-10">Codigo</td>
                                 <td>Descripcion</td>
                                 <td class="td-10">Precio Unit.</td>
                                 <td class="td-10">Cant.</td>
@@ -117,7 +118,7 @@
                         </thead>
                         <tbody> @foreach($productos as $n)
                             <tr>
-                                <td class="td-10">{{$n->pivot->cantidad}}</td>
+                                <td class="td-10">{{$n->id}}</td>
                                 <td>{{$n->descripcion}} {{$n->marca}} {{$n->medida}} {{$n->presentacion}}</td>
                                 <td class="td-10">{{$n->precioVenta}}</td>
                                 <td class="td-10">{{$n->pivot->cantidad}}</td>
@@ -156,7 +157,7 @@
         </form>
     </div>
 
-    
+
 
     <script src="{{ asset('html2.js') }}"></script>
     <script src="{{ asset('jquery.js') }}"></script>
