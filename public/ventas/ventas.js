@@ -49,7 +49,7 @@ $(document).on('click', "#btn-enviar-producto", function () {
     let stock = $(row.find('td')[3]).text();
     let precioVenta = $(row.find('td')[5]).text();
     let presentacion = $(row.find('td')[2]).text();
-    if($("#cantidad").val() > stock){
+    if ($("#cantidad").val() > stock) {
         swal.fire({ title: 'Opps.', text: "La cantidad es mayor que el Stock del Producto", icon: 'warning' });
 
         return false;
@@ -333,10 +333,10 @@ $("#btn-email").click(function (e) {
         $("#email").val("");
     });
 });
-function generar_window(){
+function generar_window() {
     html2canvas($(".pdf")[0]).then(function (canvas) {
         let imagen = canvas.toDataURL("image/png");
-        let popup = window.open("", "myPopup","scrollbars=yes,resizable=yes");
+        let popup = window.open("", "myPopup", "scrollbars=yes,resizable=yes");
         popup.document.write("<html><head><title>Imprimir</title><style>@media print {body {margin: 0;padding: 0;display: flex;justify-content: center;align-items: center;height: 100vh;}img {max-width: 100%;max-height: 100%;}}</style></head><body><img src='" + imagen + "'/></body></html>");
         popup.document.close();
         setTimeout(function () {
@@ -346,8 +346,37 @@ function generar_window(){
     });
 }
 $(document).on('click', "#btn-imprimir", function () {
-    generar_window();
+    movil();
 });
+function movil() {
+
+    let pdfElement = document.querySelector(".pdf");
+
+    // Crear un objeto jspdf
+    let pdf = new jspdf.jsPDF();
+
+    // Función para cargar las imágenes en el PDF
+    function addImageToPDF(imgData) {
+        pdf.addImage(imgData, 'PNG', 10, 10, pdf.internal.pageSize.getWidth() - 10, pdf.internal.pageSize.getHeight() - 20);
+    }
+
+    // Convertir el contenido HTML a una imagen con html2canvas
+    html2canvas(pdfElement).then(function (canvas) {
+        let imagen = canvas.toDataURL("image/png");
+
+        // Agregar la imagen al PDF
+        addImageToPDF(imagen);
+
+        // Imprimir o descargar el PDF en el dispositivo
+        pdf.autoPrint();
+        pdf.output("dataurlnewwindow");
+    }).catch(function (error) {
+        console.error("Error al generar el PDF:", error);
+    });
+
+
+
+}
 
 
 
