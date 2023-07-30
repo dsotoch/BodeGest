@@ -358,7 +358,14 @@ function movil() {
     // Función para cargar las imágenes en el PDF
     function addImageToPDF(imgData) {
         pdf.addImage(imgData, 'PNG', 10, 10, pdf.internal.pageSize.getWidth() - 10, pdf.internal.pageSize.getHeight() - 20);
+     pdf.autoPrint();
+    // Abrir el PDF en una nueva ventana
+    let pdfDataUri = pdf.output('datauristring');
+    let popup = window.open(pdfDataUri);
+    if (!popup) {
+      alert("Error al abrir el visor de PDF. Por favor, asegúrate de permitir ventanas emergentes.");
     }
+  }
 
     // Convertir el contenido HTML a una imagen con html2canvas
     html2canvas(pdfElement).then(function (canvas) {
@@ -367,9 +374,10 @@ function movil() {
         // Agregar la imagen al PDF
         addImageToPDF(imagen);
 
-        // Imprimir o descargar el PDF en el dispositivo
-        pdf.autoPrint();
-        pdf.output("dataurlnewwindow");
+       
+        //pdf.output("dataurlnewwindow");
+        
+        
     }).catch(function (error) {
         console.error("Error al generar el PDF:", error);
     });
