@@ -350,36 +350,48 @@ $(document).on('click', "#btn-imprimir", function () {
 });
 function movil() {
     let pdfElement = document.querySelector(".pdf");
-  
+
     // Crear un objeto jspdf
     let pdf = new jspdf.jsPDF();
-  
+
     // Función para cargar las imágenes en el PDF
     function addImageToPDF(imgData) {
-      pdf.addImage(imgData, 'PNG', 10, 10, pdf.internal.pageSize.getWidth() - 10, pdf.internal.pageSize.getHeight() - 20);
-      pdf.autoPrint();
-      // Crear un iframe para mostrar el PDF dentro del navegador
-      let pdfDataUri = pdf.output('datauristring');
-      let iframe = document.createElement('iframe');
-      iframe.src = pdfDataUri;
-      iframe.width = "100%";
-      iframe.height = "600px"; // Ajusta el alto según tus necesidades
-  
-      // Agregar el iframe al cuerpo del documento actual
-      document.body.appendChild(iframe);
+        pdf.addImage(imgData, 'PNG', 10, 10, pdf.internal.pageSize.getWidth() - 10, pdf.internal.pageSize.getHeight() - 20);
+        pdf.autoPrint();
+
+        // Verificar si el dispositivo es móvil o no
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+            // Realizar acciones específicas para dispositivos móviles, en este caso, no abrir la ventana emergente
+            pdfDataUri = pdf.output('datauristring');
+            // Crear un enlace para descargar el PDF
+            let downloadLink = document.createElement('a');
+            downloadLink.href = pdfDataUri;
+            downloadLink.download = 'nombre_del_archivo.pdf'; // Nombre del archivo a descargar
+            downloadLink.click();
+
+            // Eliminar el enlace después de la descarga
+            downloadLink.remove();
+            // Puedes tomar alguna otra acción aquí para dispositivos móviles
+        } else {
+            // Abrir la ventana emergente para impresión en dispositivos no móviles (Windows)
+            pdf.output('dataurlnewwindow');
+        }
+
+
     }
-  
+
     // Convertir el contenido HTML a una imagen con html2canvas
     html2canvas(pdfElement).then(function (canvas) {
-      let imagen = canvas.toDataURL("image/png");
-  
-      // Agregar la imagen al PDF
-      addImageToPDF(imagen);
+        let imagen = canvas.toDataURL("image/png");
+
+        // Agregar la imagen al PDF
+        addImageToPDF(imagen);
     }).catch(function (error) {
-      console.error("Error al generar el PDF:", error);
+        console.error("Error al generar el PDF:", error);
     });
-  }
-  
+}
+
 
 function error(texto) {
     swal.fire({
