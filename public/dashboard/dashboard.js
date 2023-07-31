@@ -10,6 +10,7 @@ function grafico_ventas_compras() {
         data: "",
         dataType: "json",
         success: function (response) {
+            console.log(response);
             let ventas = [];
             let compras = [];
             ventas.push(response[1]);

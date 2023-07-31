@@ -77,7 +77,7 @@ class ControllerUsuario extends Controller
             $token_valido = confirmacions::where('token', $token)->first();
             if ($token_valido) {
                 $user = User::where('email', $token_valido->email)->first();
-                $user->email_verified_at = Carbon::now();
+                $user->email_verified_at = Carbon::now('America/Lima');
                 $user->save();
                 $persona = $user->personas;
                 $persona->estado = 'verificado';

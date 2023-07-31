@@ -21,11 +21,11 @@ class ControllerPrincipal extends Controller
     {
         $user = Auth::user();
         $ventas = ventas::where('user_id', $user->id)
-            ->whereDate('fecha', Carbon::now())
+            ->whereDate('fecha', Carbon::now('America/Lima'))
             ->select(\DB::raw('SUM(totalVenta) as monto_venta'))
             ->first();
         $compras = compras::where('user_id', $user->id)
-            ->whereDate('fecha', Carbon::now())
+            ->whereDate('fecha', Carbon::now('America/Lima'))
             ->select(\DB::raw('SUM(totalCompra) as monto_compra'))
             ->first();
         $respuesta = [$compras->monto_compra ?? 0.0, $ventas->monto_venta ?? 0.0];
@@ -35,7 +35,7 @@ class ControllerPrincipal extends Controller
     public function ventas_mayores(Request $request){
         $user=Auth::user();
         $ventas = ventas::where('user_id', $user->id)
-        ->whereDate('fecha', Carbon::now())
+        ->whereDate('fecha', Carbon::now('America/Lima'))
         ->select('cliente_id','totalVenta as monto_venta')
         ->orderBy('monto_venta', 'DESC')
         ->limit(3)

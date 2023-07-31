@@ -18,7 +18,7 @@ class ControllerFinanzas extends Controller
    {
       $user = Auth::user();
       $ultimo_balance = finanzas::where('user_id', $user->id)->max('fechaTermino');
-      $anterior = Carbon::now();
+      $anterior = Carbon::now('America/Lima');
       if ($ultimo_balance == null) {
          $anterior->subDays(2);
       } else {
@@ -77,7 +77,7 @@ class ControllerFinanzas extends Controller
    {
       $user = Auth::user();
       $ultimo_balance = finanzas::where('user_id', $user->id)->max('fechaTermino');
-      $anterior = Carbon::now();
+      $anterior = Carbon::now('America/Lima');
       if ($ultimo_balance == null) {
          $anterior->subDays(2);
       } else {

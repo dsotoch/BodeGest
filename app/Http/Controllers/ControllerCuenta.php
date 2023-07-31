@@ -37,7 +37,7 @@ class ControllerCuenta extends Controller
             $n_fiadas = $cuentas_fiadas->count();
         }
         $total_sin_pagar = $n_pacrial + $n_fiadas;
-        $fecha_actual = Carbon::now();
+        $fecha_actual = Carbon::now('America/Lima');
         $cliente = [];
         $ventas = ventas::where('user_id', $user->id)->where('estado', '!=', 'CANCELADO')->select(
             'cliente_id',

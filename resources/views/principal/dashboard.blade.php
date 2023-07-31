@@ -54,9 +54,7 @@
 </div>
 @endsection
 @section("scripts")
-
 <script src="{{asset('jquery.js')}}"></script>
 <script src="{{asset('dashboard/dashboard.js')}}"></script>
 <script src="{{asset('pagos/webhoot.js')}}"></script>
-
 @endsection

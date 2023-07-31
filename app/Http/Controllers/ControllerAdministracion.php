@@ -42,8 +42,8 @@ class ControllerAdministracion extends Controller
         $ingresos = [];
         $egresos = [];
         for ($i = 3; $i >= 1; $i--) {
-            $fecha_inicio = now()->subWeeks($i)->startOfWeek();
-            $fecha_fin = now()->subWeeks($i)->endOfWeek();
+            $fecha_inicio = now('America/Lima')->subWeeks($i)->startOfWeek();
+           $fecha_fin = now('America/Lima')->subWeeks($i)->endOfWeek();
             array_push($fechas, ['inicio' => $fecha_inicio->format('d/m/Y'), 'fin' => $fecha_fin->format('d/m/Y')]);
             $ingresos_total = ventas::whereBetween('fecha', [$fecha_inicio, $fecha_fin])
                 ->where('user_id', $user->id)
@@ -78,9 +78,9 @@ class ControllerAdministracion extends Controller
         );
         $meses_anteriores_nombres=[];
 
-        $fecha_actual = Carbon::now();
+        $fecha_actual = Carbon::now('America/Lima');
         $meses_anteriores = [];
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i < 5; $i++) {
             $fecha_anterior = $fecha_actual->subMonth();
             $mes_anterior = $fecha_anterior->month;
             $anio_anterior = $fecha_actual->year;

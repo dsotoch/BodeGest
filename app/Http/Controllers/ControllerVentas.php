@@ -27,7 +27,7 @@ class ControllerVentas extends Controller
         $user = Auth::user();
         $clientes = clientes::where('user_id', $user->id)->get();
         $igv = 18;
-        $fecha = Carbon::now()->setTimezone('America/Lima')->format('Y-m-d');
+        $fecha = Carbon::now('America/Lima')->setTimezone('America/Lima')->format('Y-m-d');
         return view('ventas.index', ['igv' => $igv, 'clientes' => $clientes, 'fecha' => $fecha]);
     }
     public function numero_venta()

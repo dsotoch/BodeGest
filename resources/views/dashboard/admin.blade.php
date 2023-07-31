@@ -86,7 +86,7 @@
             <div class="col-12 col-lg-12 col-xxl-12 mt-4">
                 <div class="card h-100">
                     <div class="card-header d-flex flex-between-center py-2">
-                        <h6 class="mb-0 ">Balance de Ventas de los Ultimos 6 Meses</h6>
+                        <h6 class="mb-0 ">Balance de Ventas de los Ultimos 4 Meses</h6>
 
                     </div>
                     <canvas class="card-body" id="ventas-mensual">
@@ -106,5 +106,4 @@
 @section("scripts")
 <script src="{{asset('jquery.js')}}"></script>
 <script src="{{asset('dashboard/analisis.js')}}"></script>
-
 @endsection
