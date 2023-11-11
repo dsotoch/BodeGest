@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\cancelarSuscripcions;
 use App\Models\pagos;
 use App\Models\personas;
 use App\Models\suscripcions;
@@ -11,242 +12,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Openpay\Data\Openpay;
 use Carbon\Carbon;
-
+use DateInterval;
+use DateTime;
+use DateTimeZone;
+use GuzzleHttp\Client;
+use Throwable;
 
 class ControllerWebhook extends Controller
 {
-    private function instanciaopen()
-    {
-        
-        $openpay = Openpay::getInstance(env('OPENPAY_MERCHANT_ID'), env('OPENPAY_PRIVATE_KEY'), 'PE');
-        return $openpay;
-    }
-    public function handle(Request $request)
-    {
-        $user = Auth::user();
-        $openpay = $this->instanciaopen();
-        $customerList = $openpay->customers->getList(['external_id' => $user->email]);
-        $customer = $openpay->customers->get($customerList[0]->id);
 
-        $bd_suscription = suscripcions::where('user_id', $user->id)->where('estado', '!=', 'cancelada')->first();
-        if ($bd_suscription) {
-            try {
-                $op_subscripcion = $customer->subscriptions->get($bd_suscription->suscripcion_id);
-                if ($bd_suscription->estado == 'trial') {
-                    $bd_suscription->estado = $op_subscripcion->status;
-                    $bd_suscription->save();
-                }
-                if ($op_subscripcion->status == 'unpaid') {
-                    return response()->json('sin-pagar');
-                } else {
-                    return response()->json('pagado');
-                }
-            } catch (\Throwable $th) {
-                if ($bd_suscription) {
-                    $bd_suscription->estado = 'cancelada';
-                    $bd_suscription->save();
-                }
-
-                return response()->json('cancelada');
-            }
-        } else {
-            return response()->json('sin-suscripcion');
-        }
-    }
-    public function renew_payment()
-    {
-        $user = Auth::user();
-        $openpay = $this->instanciaopen();
-        $customerList = $openpay->customers->getList(['external_id' => $user->email]);
-        $customer = $openpay->customers->get($customerList[0]->id);
-        $bd_suscription = suscripcions::where('user_id', $user->id)->where('estado', '!=', 'cancelada')->first();
-        $op_subscripcion = $customer->subscriptions->get($bd_suscription->suscripcion_id);
-        $plan = $openpay->plans->get($op_subscripcion->plan_id);
-        return view('pagos.renovarpago', ['email' => $user->email, 'monto_plan' => $plan->amount]);
-    }
-    public function renew(Request $request)
-    {
-
-        $user = User::where('email', $request->input('cliente-email'))->first();
-        $persona = personas::where('user_id', $user->id)->first();
-        $openpay = $this->instanciaopen();
-
-        $token_id = $request->input('token_id');
-        $deviceIdHiddenFieldName = $request->input('deviceIdHiddenFieldName');
-        $plan = $openpay->plans->get(env('PLAN_OPEN'));
-        $cliente_basico = $this->crearClienteBasico($user, $persona, $openpay);
-        $card = $this->agregar_tarjeta_a_cliente($token_id, $deviceIdHiddenFieldName, $cliente_basico);
-
-
-        if (!is_string($card)) {
-
-            $cargo = $this->cargo_de_prueba_basico($token_id, $deviceIdHiddenFieldName, $cliente_basico);
-
-            if (!is_string($cargo)) {
-                $subscription = $this->actualizar_subscripcion($cliente_basico, $card);
-                if (!is_string($subscription)) {
-                    $subscripcionid = $this->guardar_subscripcion_BD_basico($subscription, $user, $plan);
-                    if (!is_string($subscripcionid)) {
-                        $pago = $this->guardar_pago_BD_basico($subscripcionid->id);
-                        if (!is_string($pago)) {
-                            $persona->plan = 'PLAN BASICO';
-                            $persona->save();
-                            return redirect()->route('successbasico')->with([
-                                'exito' => [
-                                    'Cargo Actual' => '23 PEN',
-                                    'Fecha Próximo cargo' => $subscription->charge_date,
-                                    'Cargo Próximo' => $plan->amount . " " . $plan->currency,
-                                    'Fecha de creación de la suscripción' => $subscription->creation_date,
-                                    'Período actual' => $subscription->current_period_number,
-                                    'Fecha de finalización del período actual' => $subscription->period_end_date,
-                                    'Estado' => $subscription->status,
-                                    'Fecha de finalización de la prueba gratuita' => $subscription->trial_end_date,
-                                    'ID del plan de suscripción' => $subscription->plan_id,
-                                ]
-                            ]);
-                        } else {
-                            $card->delete();
-
-                            return redirect()->route('errorbasicowebhook')->with(['error' => $pago]);
-                            #error
-                        }
-                    } else {
-
-                        return redirect()->route('errorbasicowebhook')->with(['error' => $subscripcionid]);
-                        #error
-                    }
-                } else {
-                    $card->delete();
-                    return redirect()->route('errorbasicowebhook')->with(['error' => $subscription]);
-
-                    #error
-                }
-            } else {
-                $card->delete();
-                return redirect()->route('errorbasicowebhook')->with(['error' => $cargo]);
-
-
-                #error
-            }
-        } else {
-            return redirect()->route('errorbasicowebhook')->with(['error' => $card]);
-            #error
-        }
-    }
-    private function crearClienteBasico(User $user, personas $persona, $openpay)
-    {
-        try {
-            $customerList = $openpay->customers->getList(['external_id' => $user->email]);
-            if (empty($customerList)) {
-                // Definir los datos del cliente
-                $customerData = [
-                    'name' => $user->name,
-                    'last_name' => $persona->apellidos,
-                    'email' => $user->email,
-                    'external_id' => $user->email,
-                ];
-                // Verificar si el campo "telefono" está presente en la persona
-                if ($persona->telefono) {
-                    $customerData['phone_number'] = $persona->telefono;
-                }
-                // Agregar el cliente en OpenPay
-                $customer = $openpay->customers->add($customerData);
-                return $customer;
-            } else {
-                // Obtener el primer cliente de la lista
-                $customer = $openpay->customers->get($customerList[0]->id);
-                return $customer;
-            }
-        } catch (\Exception $th) {
-            return $th->getMessage();
-        }
-    }
-    private function agregar_tarjeta_a_cliente($token_id, $deviceIdHiddenFieldName, $cliente_basico)
-    {
-        try {
-
-            //Agregar tarjeta al cliente
-            $card = $cliente_basico->cards->add(array(
-                'token_id' => $token_id,
-                'device_session_id' => $deviceIdHiddenFieldName,
-            ));
-            return $card;
-        } catch (\Exception $th) {
-            return $th->getMessage();
-        }
-    }
-    private function actualizar_subscripcion($cliente_basico, $card)
-    {
-        try {
-            $user = Auth::user();
-            $bd_suscription = suscripcions::where('user_id', $user->id)->where('estado','unpaid')->first();
-            $op_subscripcion = $cliente_basico->subscriptions->get($bd_suscription->suscripcion_id);
-            $op_subscripcion->card = $card->id;
-            $op_subscripcion->save();
-            $bd_suscription->estado = $op_subscripcion->status;
-            $bd_suscription->save();
-            return $op_subscripcion;
-        } catch (\Exception $th) {
-            return $th->getMessage();
-        }
-    }
-    private function cargo_de_prueba_basico($token_id, $deviceIdHiddenFieldName, $cliente_basico)
-    {
-        try {
-            $charge = $cliente_basico->charges->create(array(
-                'source_id' => $token_id,
-                'method' => 'card',
-                'currency' => 'PEN',
-                'amount' => 1,
-                'description' => 'Cargo Inicial para Validez de Tarjeta',
-                'device_session_id' => $deviceIdHiddenFieldName
-            ));
-
-
-            return $charge;
-        } catch (\Exception $th) {
-            return $th->getMessage();
-        }
-    }
-
-    private function guardar_subscripcion_BD_basico($subscription, $user, $plan)
-    {
-        try {
-
-            // Crear la instancia de la suscripción
-            $newSubscription = suscripcions::where('user_id', $user->id)->where('suscripcion_id', $subscription->id)->first();
-            $newSubscription->suscripcion_id = $subscription->id;
-            $newSubscription->card_id = $subscription->card->id;
-            $newSubscription->cancelado_al_finalizar_periodo = $subscription->cancel_at_period_end;
-            $newSubscription->fecha_cargo = $subscription->charge_date;
-            $newSubscription->fecha_creacion = Carbon::parse($subscription->creation_date)->toDateTimeString();
-            $newSubscription->numero_periodo_actual = $subscription->current_period_number;
-            $newSubscription->fecha_fin_periodo = $subscription->period_end_date;
-            $newSubscription->estado = $subscription->status;
-            $newSubscription->fecha_fin_prueba = $subscription->trial_end_date;
-            $newSubscription->cantidad_cargo_predeterminada = $plan->amount . " " . $plan->currency;
-            $newSubscription->id_plan = $subscription->plan_id;
-            $newSubscription->id_cliente = $subscription->customer_id;
-            $newSubscription->user_id = $user->id;
-            $newSubscription->save();
-            return $newSubscription;
-        } catch (\Exception $th) {
-            return $th->getMessage();
-        }
-    }
-    private function guardar_pago_BD_basico($subscripcionid)
-    {
-        try {
-            $paguito = new pagos();
-            $paguito->monto = 1;
-            $paguito->descripcion = 'Pago para Validar Tarjeta';
-            $paguito->suscripcion_id = $subscripcionid;
-            $paguito->save();
-            return $paguito;
-        } catch (\Exception $th) {
-            return $th->getMessage();
-        }
-    }
     function cancel()
     {
         return view('pagos/errorbasico');
@@ -255,38 +29,403 @@ class ControllerWebhook extends Controller
     {
         return view('pagos/exitobasico');
     }
-    function datos_pago_cliente()
+    function datos_movimiento_cliente()
     {
         $user = Auth::user();
-        $subscription = suscripcions::where('user_id', $user->id) ->where(function ($query) {
-            $query->where('estado', 'active')
-                  ->orWhere('estado', 'trial');
+        $subscription = suscripcions::where('user_id', $user->id)->where(function ($query) {
+            $query->where('estado', 'ACTIVO')
+                ->orWhere('estado', 'ESPERANDO');
         })->first();
-        return response()->json($subscription);
+        $array = [];
+        if ($subscription) {
+            $can_sus = cancelarSuscripcions::where("suscripcion_id", $subscription->id)->where("estado", true)->first();
+            $fecha = Carbon::now("America/Lima");
+            if ($can_sus) {
+                $fecha = $can_sus->fecha;
+            }
+            $array = [
+                "id" => $subscription->id,
+                "suscripcion_id" => $subscription->suscripcion_id,
+                "cantidad_cargo_predeterminada" => $subscription->cantidad_cargo_predeterminada,
+                "estado" => $subscription->estado,
+                "fecha" => $fecha
+            ];
+        }
+        return response()->json($array);
+    }
+    function datos_pago_cliente()
+    {
+        try {
+            $user = Auth::user();
+            $subscription = suscripcions::where('user_id', $user->id)->where(function ($query) {
+                $query->where('estado', 'ACTIVO')
+                    ->orWhere('estado', 'ESPERANDO');
+            })->first();
+            if ($subscription) {
+                $paymentsData = pagos::where('suscripcion_id', $subscription->id)
+                    ->where(function ($query) {
+                        $query->where('estado', true)
+                            ->orWhere('estado', false);
+                    })
+                    ->get();
+
+                if ($paymentsData) {
+                    $payments = [];
+                    foreach ($paymentsData as $payment) {
+                        $payments[] = [
+                            'estado' => $payment->estado ? 'CANCELADO' : 'PENDIENTE',
+                            'suscripcion_id' => $payment->suscripcion_id,
+                            'monto' => $payment->monto,
+                            'periodo' => $payment->periodo,
+                            'fechaCargo' => $payment->fechaCargo,
+                        ];
+                    }
+
+                    return response()->json($payments);
+                } else {
+                    throw new Throwable("NO TIENE NINGUN PAGO");
+                }
+            } else {
+                return response()->json(false);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(false);
+        }
+    }
+    function ChronogramGenerate($fecha)
+    {
+        $StartDate = new DateTime($fecha);
+        $interval = new DateInterval("P1M");
+        $array = [];
+        $day = $StartDate->format('d');
+        if ($day > 28) {
+            for ($i = 0; $i < 36; $i++) {
+                if ($i == 0) {
+                    $LastDayOfMonth = clone $StartDate;
+                    $array[] = $LastDayOfMonth->format('Y-m-d');
+                    $StartDate->add($interval);
+                } else {
+                    $LastDayOfMonth = clone $StartDate;
+                    $LastDayOfMonth->modify('last day of this month');
+                    $array[] = $LastDayOfMonth->format('Y-m-d');
+                    $StartDate->add($interval);
+                }
+            }
+        } else {
+            for ($i = 0; $i < 36; $i++) {
+                $array[] = $StartDate->format('Y-m-d');
+                $StartDate->add($interval);
+            }
+        }
+
+
+        return $array;
+    }
+    function reanudar_subscripcion()
+    {
+        $user = Auth::user();
+        $subscription = suscripcions::where('user_id', $user->id)->where(function ($query) {
+            $query->where("estado", "ESPERANDO")
+                ->orWhere("estado", "INACTIVO");
+        })->first();
+        if ($subscription) {
+            $cancelSuscri = cancelarSuscripcions::where('suscripcion_id', $subscription->id)->where("estado", true)->first();
+            $fechaTermino = Carbon::now("America/Lima");
+            if ($cancelSuscri) {
+                $state = $subscription->estado;
+                $fechaTermino = Carbon::parse($cancelSuscri->fecha);
+                $fechaTer = $fechaTermino->addDay();
+                if ($state == "ESPERANDO") {
+                    $response = $this->nuevaSuscripcion($subscription, $fechaTer);
+                    if ($response != "error") {
+                        $subscription->estado = "ACTIVO";
+                        $subscription->suscripcion_id = $response;
+                        $subscription->save();
+                        $persona = personas::where('user_id', $user->id)->first();
+                        $persona->plan = 'PLAN BASICO';
+                        $persona->save();
+                        $can_sus = cancelarSuscripcions::where("suscripcion_id", $subscription->id)->where("estado", true)->first();
+                        $can_sus->estado = false;
+                        $can_sus->save();
+                        pagos::where("suscripcion_id", $subscription->id)->delete();
+                        $arrayfechaspagos = $this->ChronogramGenerate($fechaTer);
+                        $c = 1;
+                        foreach ($arrayfechaspagos as $key) {
+
+                            pagos::create([
+                                "monto" => 22,
+                                "descripcion" => "Plan Basico",
+                                "suscripcion_id" => $subscription->id,
+                                "fechaCargo" => $key,
+                                "periodo" => $c++
+                            ]);
+                        }
+                        return redirect()->route("reanudarSuscripcion");
+                    }
+                }
+            } else {
+                pagos::where("suscripcion_id", $subscription->id)->delete();
+                $token = $this->nuevoPago();
+                if ($token != null) {
+                    return redirect()->route('reanudarSuscripcionFallida', ['token' => $token]);
+                }
+            }
+        }
+    }
+    function nuevaSuscripcion(suscripcions $sus, $fechaTermino)
+    {
+        $fecha = Carbon::parse($fechaTermino);
+        $fechaFormateada = $fecha->format("Y-m-d\TH:i:sP");
+        $dia = $fecha->format("d");
+        $url = "https://api.micuentaweb.pe/api-payment/V4/Charge/CreateSubscription";
+        $client = new Client();
+        $authHeader = base64_encode($_ENV["IZI_USER"] . ":" . $_ENV["IZI_PASS"]);
+        $headers = [
+            "headers" => [
+                "Authorization" => "Basic " . $authHeader,
+                "Content-Type" => "application/json"
+            ]
+        ];
+        $rrule = "RRULE:FREQ=MONTHLY;BYMONTHDAY=$dia;INTERVAL=1";
+        if ($rrule > 28) {
+            $rrule = "RRULE:FREQ=MONTHLY;BYMONTHDAY=29,30,31;BYSETPOS=-1;INTERVAL=1";
+        }
+        $dataSubscription = [
+            "amount" => 2200,
+            "currency" => "PEN",
+            "effectDate" => $fechaFormateada,
+            "orderId" => "Order-" . random_int(100, 50000),
+            "paymentMethodToken" => $sus->card_id,
+            "rrule" => $rrule
+        ];
+
+        $optionsSubscription = array_merge($headers, ["json" => $dataSubscription]);
+        //$optionsCancelSubscription = array_merge($headers, ["json" => $dataOrder]);
+        $client = new Client();
+        $responseSubs = $client->request("POST", $url, $optionsSubscription);
+        $responseSubs = $responseSubs->getBody()->getContents();
+        $respon = json_decode($responseSubs, true);
+        if ($respon["status"] == "SUCCESS") {
+            return $respon["answer"]["subscriptionId"];
+        }
+        return "error";
+    }
+    function falloRenovacion($token)
+
+    {
+        return view("pagos.renovacionfallida")->with('formToken', $token);
+    }
+    function exitoRenovacion(Request $request)
+    {
+        if ($request['kr-hash-algorithm']) {
+            $answer = json_decode($request['kr-answer'], true);
+            $token = $answer['transactions'][0]['paymentMethodToken'];
+
+            if (!$this->checkHash($request, $_ENV["SHA_KEY_IZI"])) {
+                response("er", 'Invalid signature.');
+                die("HUBO UN ERROR");
+            }
+            $user = Auth::user();
+            $subscription = suscripcions::where('user_id', $user->id)->where(function ($query) {
+                $query->where("estado", "ESPERANDO")
+                    ->orWhere("estado", "INACTIVO");
+            })->first();
+            $fecha = Carbon::now("America/Lima");
+            $response = $this->nuevaSuscripcion($subscription, $fecha);
+            $subscription->estado = "ACTIVO";
+            $subscription->suscripcion_id = $response;
+            $subscription->card_id = $token;
+            $subscription->save();
+            $persona = personas::where('user_id', $user->id)->first();
+            $persona->plan = 'PLAN BASICO';
+            $persona->save();
+            $can_sus = cancelarSuscripcions::where("suscripcion_id", $subscription->id)->where("estado", true)->first();
+            if ($can_sus) {
+                $can_sus->estado = false;
+                $can_sus->save();
+            }
+
+            $fecha = Carbon::now("America/Lima");
+            $cro = $this->ChronogramGenerate($fecha);
+            $c = 1;
+            foreach ($cro as $key) {
+                $estado = false;
+                if ($c == 1) {
+                    $estado = true;
+                }
+                pagos::create([
+                    "monto" => 22,
+                    "estado" => $estado,
+                    "descripcion" => "Plan Basico",
+                    "suscripcion_id" => $subscription->id,
+                    "fechaCargo" => $key,
+                    "periodo" => $c++
+                ]);
+            }
+        }
+
+        return view("pagos.renovacionexitosa");
+    }
+    function checkHash($data, $key)
+    {
+        $supported_sign_algos = array('sha256_hmac');
+        if (!in_array($data['kr-hash-algorithm'], $supported_sign_algos)) {
+            return false;
+        }
+        $kr_answer = str_replace('\/', '/', $data['kr-answer']);
+        $hash = hash_hmac('sha256', $kr_answer, $key);
+        return ($hash == $data['kr-hash']);
+    }
+    function nuevoPago()
+    {
+        $user = Auth::user();
+        $store = array(
+            "amount" => 2200,
+            "currency" => "PEN",
+            "formAction" => "REGISTER_PAY",
+            "overridePaymentCinematic" => "IMMEDIATE_CAPTURE",
+            "transactionOptions" => [
+                "cardOptions" => [
+                    "installmentNumber" => 1,
+                ]
+            ],
+            "customer" => [
+                "email" => $user->email
+            ]
+        );
+        $credentials = base64_encode($_ENV["IZI_USER"] . ':' . $_ENV["IZI_PASS"]);
+        $url = "https://api.micuentaweb.pe/api-payment/V4/Charge/CreatePayment";
+        $curl = curl_init();
+        $body = array(
+            CURLOPT_URL => $url,
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true, // Para recibir la respuesta en lugar de imprimirla directamente
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Basic " . $credentials,
+                "Content-Type: application/json"
+            ),
+            CURLOPT_POSTFIELDS => json_encode($store)
+        );
+
+        curl_setopt_array($curl, $body);
+        $response = curl_exec($curl);
+
+        $respon = json_decode($response);
+
+        if ($respon->status == 'ERROR') {
+            /* an error occurs, I throw an exception */
+            $error = $respon->answer;
+            return null;
+        }
+        curl_close($curl);
+        return $respon->answer->formToken;
     }
     function cancelar_subscripcion()
     {
         try {
             $user = Auth::user();
-            $subscription = suscripcions::where('user_id', $user->id)->where(function($query){
-                $query->where('estado', 'active')->orWhere('estado','trial');
+            $subscription = suscripcions::where('user_id', $user->id)->where(function ($query) {
+                $query->where('estado', 'ACTIVO')->orWhere('estado', 'ACTIVO');
             })->first();
-            $openpay = $this->instanciaopen();
-            $customerList = $openpay->customers->getList(['external_id' => $user->email]);
-            $customer = $openpay->customers->get($customerList[0]->id);
-            $subsscription = $customer->subscriptions->get($subscription->suscripcion_id);
-            $res=$subsscription->delete();
-            
-                $subscription->estado="cancelada";
+            if ($subscription) {
+                $lastTruePayment = pagos::where('suscripcion_id', $subscription->id)
+                    ->where('estado', true)
+                    ->orderBy('id', 'desc')
+                    ->first();
+                if ($lastTruePayment) {
+                    $period = $lastTruePayment->periodo;
+                } else {
+                    $OnePayment = pagos::where('suscripcion_id', $subscription->id)
+                        ->where('estado', false)
+                        ->orderBy('id', 'asc')
+                        ->first();
+                    $period = ($OnePayment->periodo) - 1;
+                }
+                $nextPayment = pagos::where('suscripcion_id', $subscription->id)
+                    ->where('estado', false)->where('periodo', $period + 1)
+                    ->first();
+                if ($nextPayment) {
+                    $fechaFin = $nextPayment->fechaCargo;
+                } else {
+                    $n_fecha = date($lastTruePayment->fechaCargo);
+                    $fechaFin = date('Y-m-d', strtotime($n_fecha . ' +1 month'));
+                }
+                $newSubscription = cancelarSuscripcions::create([
+                    "estado" => true,
+                    "fecha" => $fechaFin,
+                    "suscripcion_id" => $subscription->id
+                ]);
+                $subscription->estado = "ESPERANDO";
                 $subscription->save();
-                $persona=personas::where('user_id',$user->id)->first();
-                $persona->plan='SIN PLAN';
+                $persona = personas::where('user_id', $user->id)->first();
+                $persona->plan = 'CANCELADO';
                 $persona->save();
-              
-            return response()->json(true);
+                $this->CancelSuscriptionIzipay();
+                return response()->json(["fecha" => $fechaFin]);
+            } else {
+                #no existe suscripcion
+                return response()->json("Aun No Cuentas Con una Suscripción");
+            }
         } catch (\Throwable $th) {
             return response()->json($th->getMessage());
+        }
+    }
+    function CancelSuscriptionIzipay()
+    {
+        $user = Auth::user();
+        $subscription = suscripcions::where('user_id', $user->id)->where('estado', 'ACTIVO')->first();
 
+        if ($subscription) {
+            $urlSuscriptionCancel = "https://api.micuentaweb.pe/api-payment/V4/Subscription/Cancel";
+            $authHeader = base64_encode($_ENV["IZI_USER"] . ":" . $_ENV["IZI_PASS"]);
+            $headers = [
+                "headers" => [
+                    "Authorization" => "Basic " . $authHeader,
+                    "Content-Type" => "application/json"
+                ]
+            ];
+            $dataSubscription = [
+                "paymentMethodToken" => $subscription->card_id,
+                "subscriptionId" => $subscription->suscripcion_id
+            ];
+
+            $optionsSubscription = array_merge($headers, ["json" => $dataSubscription]);
+            //$optionsCancelSubscription = array_merge($headers, ["json" => $dataOrder]);
+            $client = new Client();
+            $responseSubs = $client->request("POST", $urlSuscriptionCancel, $optionsSubscription);
+            $responseSubs = $responseSubs->getBody()->getContents();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function CheckCancellationDate()
+    {
+        try {
+            DB::beginTransaction();
+            $user = Auth::user();
+            $suscription = suscripcions::where("user_id", $user->id)->where("estado", "ESPERANDO")->first();
+            if ($suscription) {
+                // Buscar la cancelación relacionada con esta suscripción
+                $cancelSuscri = cancelarSuscripcions::where("suscripcion_id", $suscription->id)->where("estado", true)->first();
+
+                if ($cancelSuscri && $cancelSuscri->fecha === Carbon::now("America/Lima")->format("Y-m-d")) {
+                    // Actualizar los estados y guardar los cambios
+                    $suscription->estado = "INACTIVO";
+                    $suscription->save();
+                    $cancelSuscri->estado = false;
+                    $cancelSuscri->save();
+                    DB::commit();
+
+                    return response()->json(true);
+                }
+            }
+            DB::commit();
+            return response()->json(false);
+        } catch (\Throwable $th) {
+            return response()->json(false);
+
+            DB::rollBack();
         }
     }
 }

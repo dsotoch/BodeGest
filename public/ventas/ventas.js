@@ -49,14 +49,15 @@ $(document).on('click', "#btn-enviar-producto", function () {
     let stock = $(row.find('td')[3]).text();
     let precioVenta = $(row.find('td')[5]).text();
     let presentacion = $(row.find('td')[2]).text();
-    if ($("#cantidad").val() > stock) {
-        swal.fire({ title: 'Opps.', text: "La cantidad es mayor que el Stock del Producto", icon: 'warning' });
+    let cantidad = $("#cantidad").val();
+    if (parseFloat(cantidad) > stock) {
+        swal.fire({ title: 'Opps.', text: "La cantidad es mayor que el Stock del Producto", icon: 'error' });
 
         return false;
     }
-    if ($("#cantidad").val() == "" || $("#cantidad").val() <= 0) {
-        $("#cantidad").focus();
-        swal.fire({ title: 'Opps.', text: "Ingresa una Cantidad Valida y luego Selecciona el Producto", icon: 'warning' });
+    if (cantidad == "" || cantidad <= 0) {
+        cantidad.focus();
+        swal.fire({ title: 'Opps.', text: "Ingresa una Cantidad Valida y luego Selecciona el Producto", icon: 'error' });
 
     } else {
 
@@ -69,7 +70,8 @@ $(document).on('click', "#btn-enviar-producto", function () {
             swal.fire({ title: 'Opps.', text: "El Producto ya esta Agregado", icon: 'warning' });
 
         } else {
-            let cantidad = $("#cantidad").val();
+            $(row.find('td')[3]).text(stock - cantidad);
+
             let total = parseFloat($("#cantidad").val()) * parseFloat(precioVenta);
 
             let new_row = [id, producto + " " + presentacion, precioVenta, $("#cantidad").val(), total, '<button class="btn btn-danger" id="btn-eliminar"> <i class="fas fa-trash"></i> </button>  '];
@@ -79,6 +81,8 @@ $(document).on('click', "#btn-enviar-producto", function () {
             productos.push({ 'id': id, 'cantidad': cantidad });
             $("#array_productos").val(JSON.stringify(productos));
             calcularMontoVenta();
+            $("#cantidad").val("1.0");
+
         }
     }
 
@@ -92,7 +96,7 @@ $(document).on('click', "#btn-otro-articulo", function (e) {
     let precioVenta = $("#precioVenta").val();
     let presentacion = $("#o-presentacion").val();
 
-    if ($("#o-cantidad").val() == "" || $("#o-cantidad").val() <= 0) {
+    if ($("#o-cantidad").val() == "" || parseFloat($("#o-cantidad").val()) <= 0) {
         $("#o-cantidad").focus();
         swal.fire({ title: 'Opps.', text: "Ingresa una Cantidad Valida y luego Selecciona el Producto", icon: 'warning' });
 
@@ -187,13 +191,32 @@ $("#iva").on('change', function () {
     }
 });
 $("#pago").on('change', function () {
-    if ($("#pago option:selected").val() == "parcial") {
-        $("#monto").attr('readonly', false);
-        $("#monto").focus();
+    let selectedOption = $("#pago option:selected").val();
+    switch (selectedOption) {
+        case "parcial":
+            $("#monto").attr('readonly', false);
+            $("#monto").focus();
+            break;
+        case "credito":
+            $("#monto").attr('readonly', true);
 
-    } else {
-        $("#monto").attr('readonly', true);
+            $("#t-recibido").attr('readonly', true);
+
+            break;
+        case "yape":
+            $("#monto").attr('readonly', true);
+
+            $("#t-recibido").attr('readonly', true);
+
+            break;
+        default:
+            $("#monto").attr('readonly', true);
+            $("#t-recibido").attr('readonly', false);
+
+            break;
     }
+
+
 });
 
 
@@ -220,7 +243,7 @@ $("#btn-vender").click(function (e) {
         error("Selecciona Un cliente Valido");
         return false;
     }
-    if (formaPago == "parcial" && montoInicio == "" || parseFloat(montoInicio) < 0) {
+    if (formaPago == "parcial" && montoInicio == "" || parseFloat(montoInicio) <= 0) {
         error("Ingresa Cuanto dio como inicial el Cliente");
         return false;
     }
@@ -228,23 +251,37 @@ $("#btn-vender").click(function (e) {
         error("Esta Venta no Tiene Productos");
         return false;
     }
-    if (montoRecibido == "" || montoRecibido == "") {
+    if (formaPago == "contado" && montoRecibido == "") {
         error("El Monto Recibido esta vacio o es invalido");
         return false;
     }
-    if (parseFloat(montoRecibido) < parseFloat(totalVenta)) {
+    if (formaPago == "contado" && parseFloat(montoRecibido) < parseFloat(totalVenta)) {
         error("Estas Recibiendo menos dinero que el total de la Venta");
     } else {
-        let cambio = (parseFloat(montoRecibido) - parseFloat(totalVenta)).toFixed(2);
+        if (formaPago == "contado") {
+            let cambio = (parseFloat(montoRecibido) - parseFloat(totalVenta)).toFixed(2);
+            swal.fire({
+                title: 'OK',
+                text: 'Venta Realizada , El Cambio es :' + ' ' + cambio,
+                icon: 'success',
+                confirmButtonText: 'De Acuerdo',
+
+            }).then((value) => {
+                $("#miform").submit();
+            });
+            return false;
+
+        }
         swal.fire({
             title: 'OK',
-            text: 'Venta Realizada , El Cambio es :' + ' ' + cambio,
+            text: 'Venta Realizada Correctamente',
             icon: 'success',
             confirmButtonText: 'De Acuerdo',
 
         }).then((value) => {
             $("#miform").submit();
         });
+
     }
 
 

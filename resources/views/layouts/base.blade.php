@@ -298,9 +298,12 @@
                         </div>
                         <div class="col-6">
                             <label for="">Telefono</label>
-                            <input type="text" name="telefono" id="telefono" class="form-control">
+                            <input type="text" name="telefono" id="telefonoempresa" class="form-control">
                         </div>
-
+                        <div class="col-12">
+                            <label for="empresaigv">IGV</label>
+                            <input type="number" name="empresaigv" id="empresaigv" class="form-control" step="0.01">
+                        </div>
 
                     </div>
                     <br>

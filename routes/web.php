@@ -31,12 +31,16 @@ use Illuminate\Support\Facades\URL;
 if (env('APP_ENV') === 'production') {
     URL::forceScheme('https');
 }
+
 Route::controller(ControllerWebhook::class)->prefix('Webhook')->group(function () {
-    Route::get('verificate','handle');
-    Route::get('renew_payment','renew_payment')->name('ren_pay');
-    Route::post('renew','renew');
-    Route::get('movimientos','datos_pago_cliente');
-    Route::get('cancel','cancelar_subscripcion');
+    Route::get('verificate','CheckCancellationDate');
+    Route::get('movimientos','datos_movimiento_cliente');
+    Route::get('pagos','datos_pago_cliente');
+    Route::get('cancel','cancelar_subscripcion')->name("cancelarSuscripcion");
+    Route::get('resume','reanudar_subscripcion')->name("suscriptionResume");
+    Route::get("renovacionexito","exitoRenovacion")->name("reanudarSuscripcion");
+    Route::get("renovacionfallo/{token}","falloRenovacion")->name("reanudarSuscripcionFallida");
+
 
 
 });

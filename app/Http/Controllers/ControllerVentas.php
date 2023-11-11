@@ -26,7 +26,11 @@ class ControllerVentas extends Controller
     {
         $user = Auth::user();
         $clientes = clientes::where('user_id', $user->id)->get();
-        $igv = 18;
+        $empresa = empresas::where("user_id", $user->id)->first();
+        $igv = 0;
+        if ($empresa) {
+            $igv = $empresa->igv;
+        }
         $fecha = Carbon::now('America/Lima')->setTimezone('America/Lima')->format('Y-m-d');
         return view('ventas.index', ['igv' => $igv, 'clientes' => $clientes, 'fecha' => $fecha]);
     }
@@ -236,19 +240,17 @@ class ControllerVentas extends Controller
     }
     public function detalle_venta(Request $request)
     {
-        $user=Auth::user();
-        $venta=ventas::where('user_id',$user->id)->where('documento',$request->input('venta'))->first();
-        $reponse=[];
-        if($venta){
-            $cliente=clientes::where('user_id',$user->id)->where('id',$venta->cliente_id)->first();
-            $productos=$venta->articulos;
-            array_push($reponse,[$venta,$cliente,$productos]);
+        $user = Auth::user();
+        $venta = ventas::where('user_id', $user->id)->where('documento', $request->input('venta'))->first();
+        $reponse = [];
+        if ($venta) {
+            $cliente = clientes::where('user_id', $user->id)->where('id', $venta->cliente_id)->first();
+            $productos = $venta->articulos;
+            array_push($reponse, [$venta, $cliente, $productos]);
 
             return response()->json($reponse);
-        }else{
+        } else {
             return response()->json(500);
         }
-
-        
     }
 }

@@ -12,6 +12,7 @@ class empresas extends Model
         'nombre',
         'telefono',
         'direccion',
+        'igv',
         'user_id'
     ];
 }

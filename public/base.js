@@ -16,11 +16,13 @@ $(document).on('click', '#guardarempresa', function () {
     let ruc = $("#ruc").val();
     let nombre = $("#nombre").val();
     let direccion = $("#direccion").val();
-    let telefono = $("#telefono").val();
-    if (ruc == "" || nombre == "" || direccion == "" || telefono == "") {
+    let telefono = $("#telefonoempresa").val();
+    let igv=$("#empresaigv").val();
+    console.log(igv);
+    if (ruc == "" || nombre == "" || direccion == "" || telefono == "" || igv=="" || parseFloat(igv)<=0) {
         Swal.fire("Error", "Complete todos los campos", "error");
     } else {
-        let data = { ruc: ruc, nombre: nombre, direccion: direccion, telefono: telefono };
+        let data = { ruc: ruc, nombre: nombre, direccion: direccion, telefono: telefono,igv:igv };
         $.ajax({
             type: "get",
             url: "/Login/Empresa",
@@ -45,12 +47,16 @@ $(document).on('click', '#verempresa', function () {
                 $("#ruc").val("sin datos");
                 $("#nombre").val("sin datos");
                 $("#direccion").val("sin datos");
-                $("#telefono").val("sin datos");
+                $("#telefonoempresa").val("sin datos");
+                $("#empresaigv").val("sin datos");
+
             } else {
                 $("#ruc").val(response.ruc);
                 $("#nombre").val(response.nombre);
                 $("#direccion").val(response.direccion);
-                $("#telefono").val(response.telefono);
+                $("#telefonoempresa").val(response.telefono);
+                $("#empresaigv").val(response.igv);
+
             }
             $("#guardarempresa").prop('disabled',false);
         }

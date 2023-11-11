@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pagos', function (Blueprint $table) {
-            $table->id();
-            $table->string('monto');
-            $table->string('descripcion');
-            $table->foreignId('suscripcion_id')->nullable()->references('id')->on('suscripcions')->onDelete('CASCADE');
-            $table->timestamps();
+        Schema::table('pagos', function (Blueprint $table) {
+            $table->string("periodo")->nullable();
+            $table->boolean("estado")->default(false);
+            $table->date("fechaCargo")->nullable();
+
         });
     }
 
@@ -29,6 +28,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pagos');
+        Schema::table('pagos', function (Blueprint $table) {
+            //
+        });
     }
 };

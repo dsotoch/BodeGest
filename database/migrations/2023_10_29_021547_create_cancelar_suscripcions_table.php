@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pagos', function (Blueprint $table) {
+        Schema::create('cancelar_suscripcions', function (Blueprint $table) {
             $table->id();
-            $table->string('monto');
-            $table->string('descripcion');
-            $table->foreignId('suscripcion_id')->nullable()->references('id')->on('suscripcions')->onDelete('CASCADE');
+            $table->boolean("estado")->default(false);
+            $table->date('fecha');
+            $table->foreignId('suscripcion_id')->references("id")->on("suscripcions")->onDelete("CASCADE");
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pagos');
+        Schema::dropIfExists('cancelar_suscripcions');
     }
 };

@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pagos', function (Blueprint $table) {
-            $table->id();
-            $table->string('monto');
-            $table->string('descripcion');
-            $table->foreignId('suscripcion_id')->nullable()->references('id')->on('suscripcions')->onDelete('CASCADE');
-            $table->timestamps();
+        Schema::table('empresas', function (Blueprint $table) {
+            $table->float("igv")->default(0.0);
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pagos');
+        Schema::table('empresas', function (Blueprint $table) {
+            //
+        });
     }
 };

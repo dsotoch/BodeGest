@@ -22,7 +22,6 @@
                     <button disabled class="btn-dark"><i class="fas fa-coins"></i> </button>
                     <select name="moneda" id="moneda" class="form-select" required>
                         <option value="soles" selected>Soles</option>
-                        <option value="dolares">Dolares</option>
 
                     </select>
                 </div>
@@ -108,7 +107,7 @@
                 <label for="t-pagar" class="form-label">Total a Pagar</label>
                 <input type="number" name="t-pagar" id="t-pagar" step="0.01" class="form-control" required readonly>
                 <label for="t-recibido" class="form-label">Total Recibido</label>
-                <input type="number" name="t-recibido" id="t-recibido" step="0.01" class="form-control" required>
+                <input type="number" name="t-recibido" id="t-recibido" step="0.01" class="form-control" required >
                 
                 <hr>
                 <button class="btn btn-success" id="btn-vender" type="submit">Vender</button>
@@ -138,7 +137,7 @@
                     <p class="fs--2 mb-0">Añadido por <a class="link-600 fw-semi-bold">Bodegest</a></p>
                 </div>
                 <div class="p-0">
-                    <div class="p-2 mod-ca"><label for="cantidad" id="t-cant">CANTIDAD</label><input class="form-control btn-danger" type="number" step="0.01" id="cantidad"></div>
+                    <div class="p-2 mod-ca"><label for="cantidad" id="t-cant">CANTIDAD</label><input class="form-control btn-danger" type="number" step="0.01" id="cantidad" value="1.0"></div>
                     <div class="p-2 mod-ca "><button class="btn btn-info btn-icon-text" data-bs-toggle="modal" data-bs-target="#nuevo-producto"><i class="fas fa-cart-arrow-down btn-icon-prepend" id="t-cant"></i>Otro Producto</button></div>
 
                     <div class="card p-2">

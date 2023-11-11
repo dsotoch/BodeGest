@@ -44,7 +44,7 @@ $(document).on('click', '#btn-registrarse', function () {
                 data: { dni: dni, nombres: nombres, apellidos: apellidos, telefono: telefono, email: email, password: password, _token: csrf_token },
                 dataType: "json",
                 success: function (response) {
-                    
+
                     if (response == 'EXISTE') {
                         Swal.fire(
                             'ERROR!',
@@ -98,7 +98,7 @@ $(document).on('click', '#btn-iniciar-sesion', function () {
                             icon: 'success',
                             confirmButtonText: 'Ok'
                         }).then((value) => {
-                            window.location.href = "/Principal/Dashboard";
+                            CheckCancellationDate();
                         });
                         break;
                     case false:
@@ -143,15 +143,22 @@ $(document).on('click', '#btn-iniciar-sesion', function () {
     }
 
 });
-var cliente = "";
-var plan = "";
-$(document).on('click', '#btn-basico', function () {
-    cliente = $("#cliente").val();
-    plan = $("#planbasico").val();
-    $("#modalprecios").modal('hide');
-    $("#modal-pagar").modal('show');
-    $("#amount").val(plan);
-    $("#cliente-email").val(cliente);
-});
+
+function CheckCancellationDate() {
+    $.ajax({
+        type: "get",
+        url: "/Webhook/verificate",
+        data: "",
+        dataType: "json",
+        success: function (response) {
+            if(response==false){
+                window.location.href = "/Principal/Dashboard";
+            }else{
+                $("#sinlicencia").prop('hidden', false);
+            }
+
+        }
+    })
+}
 
 

@@ -2,26 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class pagos extends Model
+class cancelarSuscripcions extends Model
 {
-    protected $fillable = [
-        'monto',
-        'descripcion',
+    protected $fillable=[
         'suscripcion_id',
-        'periodo',
         'estado',
-        'fechaCargo'
-
+        'fecha'
     ];
     public function suscripcions():BelongsTo
     {
         return $this->belongsTo(suscripcions::class);
     }
-
-   
+    
 }

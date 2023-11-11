@@ -98,11 +98,6 @@
                                 <div class="col-auto">
                                 </div>
                                 <h5>Inicio de Sesión</h5>
-                                <div class="col-auto fs--1 text-600"><span class="mb-0 undefined">or</span> <span>
-                                        <a id="btn-modal-registrarse" href="
-                                        #">
-                                            Crear
-                                            una Nueva Cuenta</a></span></div>
                             </div>
                             <form id="form-iniciar-sesion">
                                 @csrf
@@ -178,7 +173,7 @@
             </div>
         </div>
         <!--Modal Precios -->
-        <div class="modal fade" id="modalprecios" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade modal-static" id="modalprecios" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog   modal-lg     ">
                 <div class="modal-content">
                     <div class="modal-header px-5 position-relative modal-shape-header bg-shape">

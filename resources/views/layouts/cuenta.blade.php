@@ -32,7 +32,7 @@
                 @endif
                 @endif
             </div>
-            <div class="col-lg-8">
+            <div class="col-md-8 col-lg-8">
                 <h4 class="mb-1"> {{$user->name }} {{$persona->apellidos}}<span data-bs-toggle="tooltip" data-bs-placement="right" title="" data-bs-original-title="Verified" aria-label="Verified"><svg class="svg-inline--fa fa-check-circle fa-w-16 text-primary" data-fa-transform="shrink-4 down-2" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="check-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="" style="transform-origin: 0.5em 0.625em;">
                             <g transform="translate(256 256)">
                                 <g transform="translate(0, 64)  scale(0.75, 0.75)  rotate(0 0 0)">
@@ -47,9 +47,37 @@
                 <div class="border-dashed-bottom my-4 d-lg-none"></div>
 
                 <hr>
-                <button class="btn btn-danger" id="btn-cancelar">Cancelar Subscripción</button>
+                <h5>Mi Suscripción</h5>
+                <br>
+                <h5 class="fs-0 fw-normal text-dark">ID => <span id="su_id" class="text-dark"></span></h5>
+                <h5 class="fs-0 fw-normal text-dark">Numero => <span id="su_nu" class="text-dark"></span></h5>
+                <h5 class="fs-0 fw-normal text-dark">Estado => <span id="su_es" class="text-dark"></span></h5>
+                <h5 class="fs-0 fw-normal text-dark">Monto => <span id="su_cg" class="text-dark"></span></h5>
+                <br>
+                <h5 id="cancel-sus" hidden class="fs-0 fw-normal text-danger">TU SUSCRIPCION TERMINA EL => <span id="fin_sus" class="text-danger"></span></h5>
+
+                <br>
+                <div class="row">
+                    <div class="col-12 col-md-6"><button type="button" class="btn btn-danger" id="btn-cancelar">Cancelar Subscripción</button>
+
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <form action="{{route('suscriptionResume')}}" method="get" id="form-resume">
+                            @csrf
+                            @if ($estado =="ESPERANDO" || $estado =="INACTIVO" )
+                            <button type="submit" class="btn btn-info" id="btn-reanudar">Reanudar Subscripción</button>
+                            @else
+                            <button type="submit" class="btn btn-info" id="btn-reanudar" hidden>Reanudar Subscripción</button>
+
+                            @endif
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <hr>
+
             </div>
-            <form action="/Login/ModificarCuenta" id="form-cuenta" method="post" enctype="multipart/form-data" class="col-lg-4">
+            <form action="/Login/ModificarCuenta" id="form-cuenta" method="post" enctype="multipart/form-data" class="col-md-4 col-lg-4">
                 @csrf
                 <div class="col ps-2 ps-lg-3">
 
@@ -63,7 +91,7 @@
 
                     <div class="flex-1 mt-2">
                         <h6 class="mb-0">Cambiar Telefono</h6>
-                        <input type="text" name="telefono" id="telefono" class="form-control" autofocus required>
+                        <input type="number" name="telefono" id="telefono" class="form-control" autofocus required>
                         <hr>
                         <center><Button class="btn btn-success" type="submit"> Registrar</Button></center>
                     </div>
@@ -75,15 +103,15 @@
             </form>
             <div class="col-lg-12">
                 <hr>
-                <h5>Mi Suscripción</h5>
+                <h5>Mis Pagos</h5>
                 <div class="table-responsive">
-                    <table class="table" id="tb-movi">
+                    <table class="table" id="tb-pag">
                         <thead>
                             <th>Estado</th>
                             <th>Suscripción</th>
                             <th>Costo</th>
                             <th>Periodo</th>
-                            <th>Fecha Fin</th>
+                            <th>Fecha Pago</th>
 
                         </thead>
                         <tbody></tbody>

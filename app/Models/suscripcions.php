@@ -33,5 +33,8 @@ class suscripcions extends Model
         return $this->hasMany(pagos::class);
 
     }
+    public function  cancelarSuscripcion() : HasMany {
+        return $this->hasMany(cancelarSuscripcions::class);
 
+    }
 }
