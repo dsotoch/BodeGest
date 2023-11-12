@@ -15,7 +15,7 @@ class ControllerAdministracion extends Controller
     public function index()
     {
         $user = Auth::user();
-        $productos = articulos::where('user_id', $user->id)->where('stock', '<=', 3)->get();
+        $productos = articulos::where('user_id', $user->id)->where('stock', '<=', 3)->where("estado",true)->get();
         return view('dashboard.admin', ['productos' => $productos]);
     }
     public function datos()

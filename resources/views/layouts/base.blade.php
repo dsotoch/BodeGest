@@ -14,12 +14,12 @@
     <!-- ===============================================-->
     <!--    Favicons-->
     <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('falcon/public/public/assets/img/favicons/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('falcon/public/public/assets/img/favicons/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('falcon/public/assets/img/favicons/favicon-16x16.png') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('falcon/public/assets/img/favicons/favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{asset('imagenes/logo.png')}}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('imagenes/logo.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('imagenes/logo.png')}}">
+    <link rel="icon" href="{{asset('imagenes/logo.png')}}" type="image/png">
     <link rel="manifest" href="{{ asset('falcon/public/assets/img/favicons/manifest.json') }}">
-    <meta name="msapplication-TileImage" content="{{ asset('falcon/public/assets/img/favicons/mstile-150x150.png') }}">
+    <meta name="msapplication-TileImage" content="{{asset('imagenes/logo.png')}}">
     <meta name="theme-color" content="#ffffff">
     <script src="{{ asset('falcon/public/assets/js/config.js') }}"></script>
     <script src="{{ asset('falcon/public/vendors/overlayscrollbars/OverlayScrollbars.min.js') }}"></script>
