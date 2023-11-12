@@ -13,8 +13,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 txtr">
+            <div class="col-6 txtr">
                     <label for="" class="form-control">Saldo en Caja : <span class="s-caja">S/</span><span class="s-caja">{{$saldo}}</span></label>
+                </div>
+                <div class="col-6 txtr">
+                    <label for="" class="form-control">Solo Ventas : <span class="s-caja">S/</span><span class="s-caja">{{$saldoventas}}</span></label>
                 </div>
             </div>
             <div class="row">

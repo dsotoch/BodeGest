@@ -13,6 +13,7 @@ class empresas extends Model
         'telefono',
         'direccion',
         'igv',
-        'user_id'
+        'dinerocaja',
+        'user_id',
     ];
 }

@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class movimientos extends Model
 {
-   protected $fillable=['monto','tipo','fecha','operacion','user_id'];
+   protected $fillable=['monto','tipo','fecha','operacion','user_id','dinerocaja'];
 }

@@ -51,11 +51,12 @@ $(window).on('load', function () {
                             ref_ul_compras.append('<li> ' + valueOfElement.id + '/ ' + valueOfElement.fecha + '/ ' + valueOfElement.provedor +  '/ monto => ' + ' ' + valueOfElement.totalCompra + ' </li>')
                         });
                     }
+                    let saldoinicial=$("#saldo-caja").text();
                     $("#f-termino").val(fecha);
                     $("#monto-compra").text(parseFloat(m_compra).toFixed(2));
                     $("#monto-venta").text(parseFloat(m_venta).toFixed(2));
-                    $("#t-caja").text(((parseFloat(m_venta).toFixed(2)) - (parseFloat(m_compra).toFixed(2))));
-                    $("#n-caja").text(((parseFloat(m_venta).toFixed(2)) - (parseFloat(m_compra).toFixed(2))));
+                    $("#t-caja").text(((parseFloat(m_venta).toFixed(2)) - (parseFloat(m_compra).toFixed(2)))+parseFloat(saldoinicial));
+                    $("#n-caja").text(((parseFloat(m_venta).toFixed(2)) - (parseFloat(m_compra).toFixed(2)))+parseFloat(saldoinicial));
 
                 },
                 error: function (xhr, status, error) {
@@ -70,7 +71,7 @@ $(window).on('load', function () {
     $(document).on('keyup', '#m-retiro', function () {
         let monto_ingresado = parseFloat($(this).val());
         let total_caja_operacion = parseFloat($("#t-caja").text());
-        let nuevo_monto_caja = total_caja_operacion - monto_ingresado ;
+        let nuevo_monto_caja = (total_caja_operacion - monto_ingresado) ;
         $("#n-caja").text(parseFloat(nuevo_monto_caja).toFixed(2));
     });
     $(document).on('click' ,"#n-operacion",function () {
@@ -78,7 +79,6 @@ $(window).on('load', function () {
 
     });
     $(document).on('click','#g-operacion',function (e) {
-        
         e.preventDefault();
         let monto_caja =parseFloat( $("#saldo-caja").text());
         let monto_ingresado = parseFloat($(this).val());
@@ -107,7 +107,7 @@ $(window).on('load', function () {
             });
             return false;
         }
-        let n_saldo=nueva_caja+monto_caja;
+        let n_saldo=nueva_caja;
         Swal.fire({
             title: 'Nuevo Saldo en Caja',
             text: parseFloat(n_saldo).toFixed(2),

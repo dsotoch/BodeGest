@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\compras;
+use App\Models\empresas;
 use App\Models\finanzas;
 use App\Models\ventas;
 use Carbon\Carbon;
@@ -11,6 +12,8 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+
+use function PHPUnit\Framework\isNull;
 
 class ControllerFinanzas extends Controller
 {
@@ -25,10 +28,12 @@ class ControllerFinanzas extends Controller
          $anterior = Carbon::parse($ultimo_balance);
       }
       $ultimo_reporte = $anterior->copy()->addDay();
-      $saldo = finanzas::where('user_id', $user->id)->value('saldo');
-      if ($saldo == null) {
-         $saldo = 0.0;
+      $montoinicial = empresas::where("user_id", $user->id)->value("dinerocaja");
+      $saldo = 0.0;
+      if (floatval($montoinicial) > 0) {
+         $saldo = $montoinicial;
       }
+
       return view('dashboard/finanzas', ['ultimo' => $ultimo_reporte, 'anterior' => $anterior, 'saldo' => $saldo]);
    }
    public function balance(Request $request)
@@ -84,10 +89,6 @@ class ControllerFinanzas extends Controller
          $anterior = Carbon::parse($ultimo_balance);
       }
       $ultimo_reporte = $anterior->copy()->addDay();
-      $saldocaja = finanzas::where('user_id', $user->id)->value('saldo');
-      if ($saldocaja == null) {
-         $saldocaja = 0.0;
-      }
       $fechaString = $ultimo_reporte;
       $timestamp = strtotime($fechaString);
       $req_fecha = $request->input('periodo');
@@ -118,11 +119,17 @@ class ControllerFinanzas extends Controller
          ->whereDate('fecha', '>=', date('Y-m-d', $timestamp))
          ->whereDate('fecha', '<=', $fecha_termino)
          ->get();
+
+      $empresa_saldo = empresas::where("user_id", $user->id)->first();
+      $monto_caja = 0.0;
+      if ($empresa_saldo->dinerocaja >0) {
+         $monto_caja = $empresa_saldo->dinerocaja;
+      }
       $m_compra = $compras_por_fecha->sum('totalCompra');
       $m_venta = $ventas_por_fecha->sum('totalVenta');
       $m_retiro = floatval($request->input('m-retiro'));
       $m_totalBalance = number_format(($m_venta - $m_compra), 2);
-      $saldo = number_format((($m_totalBalance - $m_retiro)+$saldocaja),2);
+      $saldo = number_format((($m_totalBalance - $m_retiro) + $monto_caja), 2);
       finanzas::create([
          'fechaInicio' => $ultimo_reporte,
          'fechaTermino' => $fecha_termino,
@@ -134,6 +141,8 @@ class ControllerFinanzas extends Controller
          'saldo' => $saldo,
          'user_id' => $user->id
       ]);
-      return redirect()->back()->with(['message'=>"Balance Registrado Correctamente, su nuevo Saldo en caja es de:" ." ".$saldo]);
+      $empresa_saldo->dinerocaja = $saldo;
+      $empresa_saldo->save();
+      return redirect()->back()->with(['message' => "Balance Registrado Correctamente, su nuevo Saldo en caja es de:" . " " . $saldo]);
    }
 }

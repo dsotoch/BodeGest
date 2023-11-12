@@ -203,6 +203,7 @@ class ControllerUsuario extends Controller
             $empresa->direccion = $request->input("direccion");
             $empresa->telefono = $request->input('telefono');
             $empresa->igv=$request->input("igv");
+            $empresa->dinerocaja=$request->input("dinerocaja");
             $empresa->save();
             return response()->json("Datos de tu Empresa Modificados Correctamente");
         } else {
@@ -212,6 +213,7 @@ class ControllerUsuario extends Controller
                 'direccion' => $request->input("direccion"),
                 'telefono' => $request->input('telefono'),
                 'igv'=>$request->input("igv"),
+                'dinerocaja'=>$request->input("dinerocaja"),
                 'user_id' => $user->id
             ]);
             return response()->json("Datos de tu Empresa Registrados Correctamente");

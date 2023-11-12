@@ -10,6 +10,7 @@ use App\Models\provedores;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use TCPDF;
 use Intervention\Image\Facades\Image;
 
@@ -24,13 +25,22 @@ class ControllerCompras extends Controller
     {
         return view('compras.index');
     }
+
     public function codigo()
     {
         $user = Auth::user();
-        $codigo_actual = compras::where('user_id', $user->id)->max('id');
-        $codigo = intval($codigo_actual) + 1;
+
+        $cacheKey = 'codigo_actual_compra_' . $user->id;
+
+        $codigo = Cache::remember($cacheKey, 30, function () use ($user) {
+            return compras::where('user_id', $user->id)->max('id');
+        });
+
+        $codigo = intval($codigo) + 1;
+
         return response()->json(['codigo' => $codigo]);
     }
+
     public function proveedores(Request $request)
     {
         $user = Auth::user();
@@ -60,13 +70,16 @@ class ControllerCompras extends Controller
         $compra->fecha = Carbon::parse($request->input("fecha"));
         $compra->usuarios()->associate($user);
 
-        $imagencomprimida = Image::make($request->file('comprobante'))->encode('jpg', 80);
-        $nombreunico = time() . $request->file('comprobante')->getClientOriginalName();
-        $rutaImagenComprimida = 'imagenes/usuarios/' . $nombreunico;
+        $isComprobante = $request->hasfile('comprobante');
+        if ($isComprobante) {
+            $imagencomprimida = Image::make($request->file('comprobante'))->encode('jpg', 80);
+            $nombreunico = time() . $request->file('comprobante')->getClientOriginalName();
+            $rutaImagenComprimida = 'imagenes/usuarios/' . $nombreunico;
 
-        $imagencomprimida->save(public_path($rutaImagenComprimida));
-        $compra->comprobante = $nombreunico;
-        $compra->public_path = $rutaImagenComprimida;
+            $imagencomprimida->save(public_path($rutaImagenComprimida));
+            $compra->comprobante = $nombreunico;
+            $compra->public_path = $rutaImagenComprimida;
+        }
         $compra->save();
         movimientos::create(
             [
@@ -77,7 +90,8 @@ class ControllerCompras extends Controller
                 'tipo' => "COMPRA",
             ]
         );
-
+        $newCodigo = compras::where('user_id', $user->id)->max('id');
+        Cache::put('codigo_actual_compra_' . $user->id, intval($newCodigo)+1, 30);
         return redirect()->route('compras')->with(['mensaje' => "Compra Numero" . " "  . $compra->id . " Registrada Correctamente"]);
     }
     public function finalizar($id)
@@ -117,10 +131,10 @@ class ControllerCompras extends Controller
     }
     public function detalle_compra(Request $request)
     {
-        
+
         $user = Auth::user();
         $compras = compras::where('user_id', $user->id)->where('id', $request->input('compra'))->first();
-       
+
         if ($compras) {
             return response()->json($compras);
         } else {

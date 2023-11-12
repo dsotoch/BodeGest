@@ -32,7 +32,7 @@ if (env('APP_ENV') === 'production') {
     URL::forceScheme('https');
 }
 
-Route::controller(ControllerWebhook::class)->prefix('Webhook')->group(function () {
+Route::middleware("auth")->controller(ControllerWebhook::class)->prefix('Webhook')->group(function () {
     Route::get('verificate','CheckCancellationDate');
     Route::get('movimientos','datos_movimiento_cliente');
     Route::get('pagos','datos_pago_cliente');
@@ -46,8 +46,7 @@ Route::controller(ControllerWebhook::class)->prefix('Webhook')->group(function (
 });
 
 Route::get('/', [ControllerUsuario::class, 'login'])->name('login');
-Route::controller(ControllerPagos::class)->prefix('Pagos')->group(function () {
-
+Route::middleware("auth")->controller(ControllerPagos::class)->prefix('Pagos')->group(function () {
     Route::post('CrearCargo', 'crear_cargo_plan_basico');
     Route::get('cancel', 'cancel')->name('errorbasico');
     Route::get('cancelw', 'cancelaw')->name('errorbasicowebhook');
@@ -56,32 +55,30 @@ Route::controller(ControllerPagos::class)->prefix('Pagos')->group(function () {
     Route::get('agregarTarjeta', 'asignarTarjeta');
 });
 Route::controller(ControllerUsuario::class)->prefix('Login')->group(function () {
-
-
     Route::get('Registrarse', 'crearUsuario');
     Route::get('confirmar-correo', 'EmailConfirmacion');
     Route::get('validarToken/{token}', 'validarToken')->name('validar-token');
     Route::get('IniciarSesion', 'IniciarSesion');
-    Route::get('Logout', 'logout')->name('logout');
-    Route::get('Empresa', 'empresa');
-    Route::get('verEmpresa', 'verempresa');
-    Route::get('Cuenta', 'cuenta')->name('micuenta');
-    Route::post('ModificarCuenta', 'modificar_cuenta');
+    Route::get('Logout', 'logout')->name('logout')->middleware("auth");
+    Route::get('Empresa', 'empresa')->middleware("auth");
+    Route::get('verEmpresa', 'verempresa')->middleware("auth");
+    Route::get('Cuenta', 'cuenta')->name('micuenta')->middleware("auth");
+    Route::post('ModificarCuenta', 'modificar_cuenta')->middleware("auth");
 });
-Route::controller(ControllerPrincipal::class)->prefix('Principal')->group(function () {
+Route::middleware("auth")->controller(ControllerPrincipal::class)->prefix('Principal')->group(function () {
     Route::get('Dashboard', 'dashboard')->name("dashboard");
     Route::get('CompraVenta', 'compras_ventas');
     Route::get('VentasMayores', 'ventas_mayores');
 });
-Route::controller(ControllerHome::class)->prefix('Home')->group(function () {
+Route::middleware("auth")->controller(ControllerHome::class)->prefix('Home')->group(function () {
     Route::get('Home', 'index')->name('home');
 });
-Route::controller(ControllerFinanzas::class)->prefix('Finanzas')->group(function () {
+Route::middleware("auth")->controller(ControllerFinanzas::class)->prefix('Finanzas')->group(function () {
     Route::get('Finanzas', 'index')->name('finanzas');
     Route::get('Balance', 'balance');
     Route::post('SaveBalance', 'guardarbalance');
 });
-Route::controller(ControllerArticulos::class)->prefix('Articulos')->group(function () {
+Route::middleware("auth")->controller(ControllerArticulos::class)->prefix('Articulos')->group(function () {
     Route::get('Index', 'index')->name('articulos');
     Route::get('Crear-Articulo', 'crear_articulo');
     Route::get('Eliminar-Todo', 'eliminar_todo');
@@ -89,7 +86,7 @@ Route::controller(ControllerArticulos::class)->prefix('Articulos')->group(functi
     Route::get('BuscarArticulo/{id}', 'buscar_articulo');
     Route::get('ModificarArticulo/{id}', 'modificar_articulo');
 });
-Route::controller(ControllerProvedores::class)->prefix('Provedores')->group(function () {
+Route::middleware("auth")->controller(ControllerProvedores::class)->prefix('Provedores')->group(function () {
     Route::get('Index', 'index')->name('provedores');
     Route::get('Detalle-Provedor/{id}', 'detalle_provedor');
     Route::get('Registrar-Provedor', 'registrar_provedor');
@@ -98,7 +95,7 @@ Route::controller(ControllerProvedores::class)->prefix('Provedores')->group(func
     Route::get('Eliminar-Provedor/{id}', 'eliminar_provedor');
     Route::get('Generar-Codigo', 'generar_codigo');
 });
-Route::controller(ControllerCompras::class)->prefix('Compras')->group(function () {
+Route::middleware("auth")->controller(ControllerCompras::class)->prefix('Compras')->group(function () {
     Route::get('Index', 'index')->name('compras');
     Route::get('GenerarCodigoCompra', 'codigo');
     Route::get('Proveedores', 'proveedores');
@@ -108,7 +105,7 @@ Route::controller(ControllerCompras::class)->prefix('Compras')->group(function (
     Route::get('DetalleCompras', 'detallecompras')->name('detallecompras');
     Route::get('Detalles', 'detalle_compra');
 });
-Route::controller(ControllerVentas::class)->prefix('Ventas')->group(function () {
+Route::middleware("auth")->controller(ControllerVentas::class)->prefix('Ventas')->group(function () {
     Route::get('Index', 'index')->name('ventas');
     Route::get('GenerarCodigoCompra', 'codigo');
     Route::get('Proveedores', 'proveedores');
@@ -123,10 +120,10 @@ Route::controller(ControllerVentas::class)->prefix('Ventas')->group(function () 
     Route::get('Detalles', 'detalle_venta');
 });
 
-Route::controller(ControllerClientes::class)->prefix('Clientes')->group(function () {
+Route::middleware("auth")->controller(ControllerClientes::class)->prefix('Clientes')->group(function () {
     Route::get('Crear', 'store')->name('crea_cliente');
 });
-Route::controller(ControllerCuenta::class)->prefix('Cuentas')->group(function () {
+Route::middleware("auth")->controller(ControllerCuenta::class)->prefix('Cuentas')->group(function () {
     Route::get('Index', 'index')->name('cuentas');
     Route::get('Show/{id}', 'show');
     Route::post('EnviarEmail', 'email')->name('enviar_estado_de_cuenta');
@@ -134,7 +131,7 @@ Route::controller(ControllerCuenta::class)->prefix('Cuentas')->group(function ()
     Route::get('GuardarRestante', 'guardar_restante');
     Route::get('CancelarSaldo/{dni}', 'cancelar_saldo');
 });
-Route::controller(ControllerAdministracion::class)->prefix('Administracion')->group(function () {
+Route::middleware("auth")->controller(ControllerAdministracion::class)->prefix('Administracion')->group(function () {
     Route::get('Index', 'index')->name('administracion');
     Route::get('Datos', 'datos');
     Route::get('ingresos_vs_egresos', 'ingresos_vs_egresos');

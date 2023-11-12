@@ -228,10 +228,10 @@
             <footer class="footer" id="footer-grande" style="margin-left: 5%;" hidden>
                 <div class="row  fs--1 mt-4 mb-3 ">
                     <div class="col-12 col-sm-auto text-center">
-                        <p class="mb-0 text-600"> Creacion de Diego Soto Chavarria <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none" /> 2023 &copy; <a href="https://www.facebook.com/diego.sotochavarria.9/" target="_blank">Desarrollador</a></p>
+                        <p class="mb-0 text-600"> Creacion de {{config('general.desarrollador')}} <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none" /> 2023 &copy; <a href="https://www.facebook.com/diego.sotochavarria.9/" target="_blank">Desarrollador</a></p>
                     </div>
                     <div class="col-12 col-sm-auto text-center">
-                        <p class="mb-0 text-600">v1.0.0</p>
+                        <p class="mb-0 text-600">{{config('general.version')}}</p>
                     </div>
                 </div>
 
@@ -239,10 +239,10 @@
             <footer class="footer" id="footer-pe" hidden>
                 <div class="row  fs--1 mt-4 mb-3 ">
                     <div class="col-12 col-sm-auto text-center">
-                        <p class="mb-0 text-600"> Creacion de Diego Soto Chavarria <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none" /> 2023 &copy; <a href="https://www.facebook.com/diego.sotochavarria.9/" target="_blank">Desarrollador</a></p>
+                        <p class="mb-0 text-600"> Creacion de {{config('general.desarrollador')}} <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none" /> 2023 &copy; <a href="https://www.facebook.com/diego.sotochavarria.9/" target="_blank">Desarrollador</a></p>
                     </div>
                     <div class="col-12 col-sm-auto text-center">
-                        <p class="mb-0 text-600">v1.0.0</p>
+                        <p class="mb-0 text-600">{{config('general.version')}}</p>
                     </div>
                 </div>
 
@@ -300,9 +300,13 @@
                             <label for="">Telefono</label>
                             <input type="text" name="telefono" id="telefonoempresa" class="form-control">
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <label for="empresaigv">IGV</label>
                             <input type="number" name="empresaigv" id="empresaigv" class="form-control" step="0.01">
+                        </div>
+                        <div class="col-6">
+                            <label for="dinerocaja">Monto Inicial en Caja</label>
+                            <input type="number" name="dinerocaja" id="dinerocaja" class="form-control" step="0.01">
                         </div>
 
                     </div>

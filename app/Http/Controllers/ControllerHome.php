@@ -22,6 +22,6 @@ class ControllerHome extends Controller
     $movimientos=movimientos::where('user_id',$user->id)->whereDate('fecha',Carbon::now('America/Lima'))->get();
   
     
-    return view('dashboard/home',['saldo'=>$saldo,'movimientos'=>$movimientos,'fecha'=>Carbon::now('America/Lima')->format('d-m-Y')]);
+    return view('dashboard/home',['saldoventas'=>$ventas,'saldo'=>$saldo,'movimientos'=>$movimientos,'fecha'=>Carbon::now('America/Lima')->format('d-m-Y')]);
    }
 }

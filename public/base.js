@@ -18,11 +18,13 @@ $(document).on('click', '#guardarempresa', function () {
     let direccion = $("#direccion").val();
     let telefono = $("#telefonoempresa").val();
     let igv=$("#empresaigv").val();
+    let montoinicial=$("#dinerocaja").val();
+
     console.log(igv);
-    if (ruc == "" || nombre == "" || direccion == "" || telefono == "" || igv=="" || parseFloat(igv)<=0) {
+    if (ruc == "" || nombre == "" || direccion == "" || telefono == "" || igv=="" || parseFloat(igv)<=0 || parseFloat(montoinicial)<0 || montoinicial=="" ) {
         Swal.fire("Error", "Complete todos los campos", "error");
     } else {
-        let data = { ruc: ruc, nombre: nombre, direccion: direccion, telefono: telefono,igv:igv };
+        let data = { ruc: ruc, nombre: nombre, direccion: direccion, telefono: telefono,igv:igv,dinerocaja:montoinicial };
         $.ajax({
             type: "get",
             url: "/Login/Empresa",
@@ -44,11 +46,12 @@ $(document).on('click', '#verempresa', function () {
         dataType: "json",
         success: function (response) {
             if (response === 500) {
-                $("#ruc").val("sin datos");
-                $("#nombre").val("sin datos");
-                $("#direccion").val("sin datos");
-                $("#telefonoempresa").val("sin datos");
-                $("#empresaigv").val("sin datos");
+                $("#ruc").val("NO CONFIGURADO");
+                $("#nombre").val("NO CONFIGURADO");
+                $("#direccion").val("NO CONFIGURADO");
+                $("#telefonoempresa").val("NO CONFIGURADO");
+                $("#empresaigv").val("NO CONFIGURADO");
+                $("#dinerocaja").val("NO CONFIGURADO");
 
             } else {
                 $("#ruc").val(response.ruc);
@@ -56,6 +59,8 @@ $(document).on('click', '#verempresa', function () {
                 $("#direccion").val(response.direccion);
                 $("#telefonoempresa").val(response.telefono);
                 $("#empresaigv").val(response.igv);
+                $("#dinerocaja").val(response.dinerocaja);
+
 
             }
             $("#guardarempresa").prop('disabled',false);

@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-6 col-md-4">
                         <label for="f-inicio">Fecha de Termino del Balance Anterior</label>
-                        <input type="text" name="f-anterior" id="f-anterior" class="form-control btn-info" value="{{$anterior->format('d-m-Y')}}" readonly>
+                        <input type="text" name="f-anterior" id="f-anterior" class="form-control text-info" value="{{$anterior->format('d-m-Y')}}" readonly>
                     </div>
                     <div class="col-6 col-md-3">
                         <label for="">Saldo en Caja</label>
@@ -42,13 +42,13 @@
                     <div class="col-6 col-lg-3">
                         <div class="t-r">
                             <label for="f-inicio">Fecha de Inicio del Nuevo Balance</label>
-                            <input type="text" name="f-inicio" id="f-inicio" class="form-control btn-success" value="{{$ultimo->format('d-m-Y')}}" readonly>
+                            <input type="text" name="f-inicio" id="f-inicio" class="form-control text-success" value="{{$ultimo->format('d-m-Y')}}" readonly>
                         </div>
                     </div>
                     <div class="col-6 col-lg-3">
                         <div class="t-r">
                             <label for="f-termino">Fecha de Termino del Nuevo Balance</label>
-                            <input type="text" name="f-termino" id="f-termino" class=" form-control btn-danger" readonly>
+                            <input type="text" name="f-termino" id="f-termino" class=" form-control text-danger" readonly>
                         </div>
                     </div>
                     <div class="col-6 col-lg-3">
@@ -87,7 +87,7 @@
                                         <h6>Panel de Opciones</h6>
                                         <div class="row">
                                             <div class="col-12">
-                                                <p>En Base al Total de las Ventas menos el Monto de Compras el Total
+                                                <p>En Base al Total de las Ventas menos el Monto de Compras, mas el saldo en caja, el Total
                                                     en Caja es => <span class="btn-warning" id="t-caja">0.0</span>
                                                     <=>
                                                         tu decides!.¿Cuanto vas a Retirar? <span> <input class="form-control" type="number" name="m-retiro" id="m-retiro" step="0.01"> </span>

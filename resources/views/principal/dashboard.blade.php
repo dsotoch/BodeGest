@@ -13,10 +13,12 @@
                     </div>
                     <!--/.bg-holder-->
 
-                    <div class="position-relative z-index-2 p-2">
-                        <div>
-                            <h3 class="text-primary mb-1">Bienvenido, {{$usuario}}!</h3>
-                            <p>Esto es lo que sucede con su tienda hoy </p>
+                    <div class="position-relative z-index-2 p-2 ">
+                        <div class="row py-3">
+                            <div class="col-12 col-md-6">
+                                <h3 class="text-primary mb-1">Bienvenido, {{$usuario}}!</h3>
+                                <p>Esto es lo que sucede con su tienda hoy </p>
+                            </div>
                         </div>
                         <div class="row py-3">
                             <div class="card col-12 col-md-6 col-lg-6 pe-3">
@@ -48,8 +50,8 @@
 
     </div>
 
-   
-    
+
+
 
 </div>
 @endsection

@@ -144,11 +144,6 @@ $(document).on('click', '#registrar-compra', function (e) {
 
         return;
     }
-    if (comprobante == "") {
-        error("Selecciona un Comprobante");
-
-        return;
-    }
     if (total_compra == "") {
         error("Rellena el total de la Compra");
 
