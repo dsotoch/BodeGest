@@ -35,7 +35,7 @@ class EnviarComprobante extends Mailable
     public function envelope()
     {
         return new Envelope(
-            from: 'bodegest@viru-tec.com',
+            from: env("MAILER"),
             subject: 'Comprobante de Venta',
         );
     }

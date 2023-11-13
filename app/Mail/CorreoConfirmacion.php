@@ -32,8 +32,8 @@ class CorreoConfirmacion extends Mailable
     public function envelope()
     {
         return new Envelope(
-            from: 'bodegest@viru-tec.com',
-            subject: 'Correo de Confirmacion de Cuenta',
+            from: env("MAILER"),
+            subject: 'Correo de Confirmación de Cuenta',
         );
     }
 
