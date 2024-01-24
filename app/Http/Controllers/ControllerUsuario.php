@@ -107,14 +107,14 @@ class ControllerUsuario extends Controller
                     return response()->json('verificado');
                 }
                 $token = Str::random(40);
-                confirmacions::create([
-                    'email' => $request->input('email'),
-                    'token' => $token
-                ]);
+
                 $url = env("URL_CONFIRMACION_EMAIL") . $token;
                 try {
                     Mail::to($request->input('email'))->send(new CorreoConfirmacion($url));
-
+                    confirmacions::create([
+                        'email' => $request->input('email'),
+                        'token' => $token
+                    ]);
                     return response()->json('verificado');
                 } catch (\Exception $th) {
 
@@ -202,8 +202,8 @@ class ControllerUsuario extends Controller
             $empresa->nombre = $request->input("nombre");
             $empresa->direccion = $request->input("direccion");
             $empresa->telefono = $request->input('telefono');
-            $empresa->igv=$request->input("igv");
-            $empresa->dinerocaja=$request->input("dinerocaja");
+            $empresa->igv = $request->input("igv");
+            $empresa->dinerocaja = $request->input("dinerocaja");
             $empresa->save();
             return response()->json("Datos de tu Empresa Modificados Correctamente");
         } else {
@@ -212,8 +212,8 @@ class ControllerUsuario extends Controller
                 'nombre' => $request->input("nombre"),
                 'direccion' => $request->input("direccion"),
                 'telefono' => $request->input('telefono'),
-                'igv'=>$request->input("igv"),
-                'dinerocaja'=>$request->input("dinerocaja"),
+                'igv' => $request->input("igv"),
+                'dinerocaja' => $request->input("dinerocaja"),
                 'user_id' => $user->id
             ]);
             return response()->json("Datos de tu Empresa Registrados Correctamente");
