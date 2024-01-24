@@ -110,7 +110,7 @@ label {
 }
 
 #tabla-detalles th {
-    background-color: black;
+    background-color: blueviolet;
     color: white;
 
 }
@@ -129,7 +129,7 @@ label {
 }
 
 #tabla-detalles tbody {
-    color: black;
+    color: gray;
 }
 #titulo-saldos {
     margin-top: 0.3rem;

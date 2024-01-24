@@ -46,7 +46,7 @@ class ControllerCuenta extends Controller
             \DB::raw('SUM(montoInicio) as monto_inicial')
         )
             ->groupBy('cliente_id')
-            ->havingRaw(DB::raw('DATE_ADD(MIN(fecha), INTERVAL 15 DAY) > ?'), [$fecha_actual])
+            ->havingRaw(\DB::raw('DATEDIFF(NOW(), MIN(fecha)) > 15'))
             ->get();
         $ventas_mayores_15 = $ventas->count();
         foreach ($ventas as $venta) {
