@@ -99,16 +99,14 @@
                 </div>
                 <div class="row p-4">
                     <div class="card col-lg-6">
-                        <h5 class="titulos">Productos</h5>
+                        <h5 class="titulos">Compras</h5>
                         <hr>
-                        <p>Para eliminar un producto de la tabla de Compra, Seleccione el producto a Eliminar</p>
-                        <p>Para generar una compra, primero es necesario registrar el producto en el sistema,<br>Una vez que el producto está registrado, los usuarios pueden elegir la cantidad que deseen comprar.
-                            Cuando un usuario realiza una compra de un producto,<br> se deben seleccionar todas las unidades que desee adquirir sin importar su presentación. Esto significa que, si el azúcar se ofrece en diferentes presentaciones (por ejemplo, una bolsa de 1 kg o un paquete de 5 kg), el usuario puede elegir cualquier presentación, el Total se Calcula en base al precioCompra * stock que has Registrado anteriormente en la seccion de Productos</p>
+                        <p>Para registrar una compra debes de completar todos los Campos.</p>
                     </div>
                     <div class="card col-lg-6">
                         <h5 class="titulos">Proveedores</h5>
                         <hr>
-                        <p>Es Necesario que Primero los Proveedores esten Registrados en el Sistema <br>Al registrar a los proveedores en el sistema, se pueden llevar un seguimiento de los productos o servicios que ofrecen, los precios y las condiciones de compra. De esta manera, cuando se necesita adquirir un producto o servicio de un proveedor en particular, se puede acceder a su información de manera rápida y sencilla.
+                        <p>Es Necesario que Primero los Proveedores esten Registrados en el Sistema <br>Al registrar a los proveedores en el sistema, se pueden llevar un seguimiento de las compras o servicios que ofrecen, los precios y las condiciones de compra. De esta manera, cuando se necesita adquirir un producto o servicio de un proveedor en particular, se puede acceder a su información de manera rápida y sencilla.
 
                         </p>
                     </div>
