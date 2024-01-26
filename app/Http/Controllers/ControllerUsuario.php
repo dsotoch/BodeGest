@@ -105,20 +105,21 @@ class ControllerUsuario extends Controller
             if ($user->email_verified_at == null) {
                 if ($isVerificate) {
                     return response()->json('verificado');
-                }
-                $token = Str::random(40);
+                } else {
+                    $token = Str::random(40);
 
-                $url = env("URL_CONFIRMACION_EMAIL") . $token;
-                try {
-                    Mail::to($request->input('email'))->send(new CorreoConfirmacion($url));
-                    confirmacions::create([
-                        'email' => $request->input('email'),
-                        'token' => $token
-                    ]);
-                    return response()->json('verificado');
-                } catch (\Exception $th) {
+                    $url = env("URL_CONFIRMACION_EMAIL") . $token;
+                    try {
+                        Mail::to($request->input('email'))->send(new CorreoConfirmacion($url));
+                        confirmacions::create([
+                            'email' => $request->input('email'),
+                            'token' => $token
+                        ]);
+                        return response()->json('verificado');
+                    } catch (\Exception $th) {
 
-                    return response()->json($th->getMessage());
+                        return response()->json($th->getMessage());
+                    }
                 }
             } else {
                 $persona = personas::where('user_id', $user->id)->first();

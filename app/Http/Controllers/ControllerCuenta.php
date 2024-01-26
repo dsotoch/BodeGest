@@ -77,6 +77,7 @@ class ControllerCuenta extends Controller
             \DB::raw('SUM(montoInicio) as monto_inicial')
         )
             ->groupBy('cliente_id')
+
             ->get();
         foreach ($deudas as $key) {
             $key->monto_deuda = $key->total_venta - $key->monto_inicial;
